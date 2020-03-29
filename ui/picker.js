@@ -21,7 +21,7 @@ class Picker {
     this.label.addEventListener("mousedown", () => {
       this.togglePicker();
     });
-    this.label.addEventListener("keydown", event => {
+    this.label.addEventListener("keydown", (event) => {
       switch (event.keyCode) {
         // Allows the "Enter" key to open the picker
         case Keyboard.keys.ENTER:
@@ -61,7 +61,7 @@ class Picker {
     item.addEventListener("click", () => {
       this.selectItem(item, true);
     });
-    item.addEventListener("keydown", event => {
+    item.addEventListener("keydown", (event) => {
       switch (event.keyCode) {
         // Allows the "Enter" key to select an item
         case Keyboard.keys.ENTER:
@@ -107,7 +107,7 @@ class Picker {
 
     this.options = options;
 
-    [].slice.call(this.select.options).forEach(option => {
+    [].slice.call(this.select.options).forEach((option) => {
       let item = this.buildItem(option);
       options.appendChild(item);
       if (option.selected === true) {
@@ -118,7 +118,7 @@ class Picker {
   }
 
   buildPicker() {
-    [].slice.call(this.select.attributes).forEach(item => {
+    [].slice.call(this.select.attributes).forEach((item) => {
       this.container.setAttribute(item.name, item.value);
     });
     this.container.classList.add("ql-picker");

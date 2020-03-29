@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 132);
+/******/ 	return __webpack_require__(__webpack_require__.s = 137);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -5511,9 +5511,9 @@ var _keyboard = __webpack_require__(25);
 
 var _keyboard2 = _interopRequireDefault(_keyboard);
 
-var _dropdown = __webpack_require__(125);
+var _unfoldMoreHorizontal = __webpack_require__(130);
 
-var _dropdown2 = _interopRequireDefault(_dropdown);
+var _unfoldMoreHorizontal2 = _interopRequireDefault(_unfoldMoreHorizontal);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -5522,7 +5522,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var optionsCounter = 0;
 
 function toggleAriaAttribute(element, attribute) {
-  element.setAttribute(attribute, !(element.getAttribute(attribute) === 'true'));
+  element.setAttribute(attribute, !(element.getAttribute(attribute) === "true"));
 }
 
 var Picker = function () {
@@ -5532,15 +5532,15 @@ var Picker = function () {
     _classCallCheck(this, Picker);
 
     this.select = select;
-    this.container = document.createElement('span');
+    this.container = document.createElement("span");
     this.buildPicker();
-    this.select.style.display = 'none';
+    this.select.style.display = "none";
     this.select.parentNode.insertBefore(this.container, this.select);
 
-    this.label.addEventListener('mousedown', function () {
+    this.label.addEventListener("mousedown", function () {
       _this.togglePicker();
     });
-    this.label.addEventListener('keydown', function (event) {
+    this.label.addEventListener("keydown", function (event) {
       switch (event.keyCode) {
         // Allows the "Enter" key to open the picker
         case _keyboard2.default.keys.ENTER:
@@ -5555,37 +5555,37 @@ var Picker = function () {
         default:
       }
     });
-    this.select.addEventListener('change', this.update.bind(this));
+    this.select.addEventListener("change", this.update.bind(this));
   }
 
   _createClass(Picker, [{
-    key: 'togglePicker',
+    key: "togglePicker",
     value: function togglePicker() {
-      this.container.classList.toggle('ql-expanded');
+      this.container.classList.toggle("ql-expanded");
       // Toggle aria-expanded and aria-hidden to make the picker accessible
-      toggleAriaAttribute(this.label, 'aria-expanded');
-      toggleAriaAttribute(this.options, 'aria-hidden');
+      toggleAriaAttribute(this.label, "aria-expanded");
+      toggleAriaAttribute(this.options, "aria-hidden");
     }
   }, {
-    key: 'buildItem',
+    key: "buildItem",
     value: function buildItem(option) {
       var _this2 = this;
 
-      var item = document.createElement('span');
-      item.tabIndex = '0';
-      item.setAttribute('role', 'button');
+      var item = document.createElement("span");
+      item.tabIndex = "0";
+      item.setAttribute("role", "button");
 
-      item.classList.add('ql-picker-item');
-      if (option.hasAttribute('value')) {
-        item.setAttribute('data-value', option.getAttribute('value'));
+      item.classList.add("ql-picker-item");
+      if (option.hasAttribute("value")) {
+        item.setAttribute("data-value", option.getAttribute("value"));
       }
       if (option.textContent) {
-        item.setAttribute('data-label', option.textContent);
+        item.setAttribute("data-label", option.textContent);
       }
-      item.addEventListener('click', function () {
+      item.addEventListener("click", function () {
         _this2.selectItem(item, true);
       });
-      item.addEventListener('keydown', function (event) {
+      item.addEventListener("keydown", function (event) {
         switch (event.keyCode) {
           // Allows the "Enter" key to select an item
           case _keyboard2.default.keys.ENTER:
@@ -5605,33 +5605,33 @@ var Picker = function () {
       return item;
     }
   }, {
-    key: 'buildLabel',
+    key: "buildLabel",
     value: function buildLabel() {
-      var label = document.createElement('span');
-      label.classList.add('ql-picker-label');
-      label.innerHTML = _dropdown2.default;
-      label.tabIndex = '0';
-      label.setAttribute('role', 'button');
-      label.setAttribute('aria-expanded', 'false');
+      var label = document.createElement("span");
+      label.classList.add("ql-picker-label");
+      label.innerHTML = _unfoldMoreHorizontal2.default;
+      label.tabIndex = "0";
+      label.setAttribute("role", "button");
+      label.setAttribute("aria-expanded", "false");
       this.container.appendChild(label);
       return label;
     }
   }, {
-    key: 'buildOptions',
+    key: "buildOptions",
     value: function buildOptions() {
       var _this3 = this;
 
-      var options = document.createElement('span');
-      options.classList.add('ql-picker-options');
+      var options = document.createElement("span");
+      options.classList.add("ql-picker-options");
 
       // Don't want screen readers to read this until options are visible
-      options.setAttribute('aria-hidden', 'true');
-      options.tabIndex = '-1';
+      options.setAttribute("aria-hidden", "true");
+      options.tabIndex = "-1";
 
       // Need a unique id for aria-controls
-      options.id = 'ql-picker-options-' + optionsCounter;
+      options.id = "ql-picker-options-" + optionsCounter;
       optionsCounter += 1;
-      this.label.setAttribute('aria-controls', options.id);
+      this.label.setAttribute("aria-controls", options.id);
 
       this.options = options;
 
@@ -5645,19 +5645,19 @@ var Picker = function () {
       this.container.appendChild(options);
     }
   }, {
-    key: 'buildPicker',
+    key: "buildPicker",
     value: function buildPicker() {
       var _this4 = this;
 
       [].slice.call(this.select.attributes).forEach(function (item) {
         _this4.container.setAttribute(item.name, item.value);
       });
-      this.container.classList.add('ql-picker');
+      this.container.classList.add("ql-picker");
       this.label = this.buildLabel();
       this.buildOptions();
     }
   }, {
-    key: 'escape',
+    key: "escape",
     value: function escape() {
       var _this5 = this;
 
@@ -5670,60 +5670,60 @@ var Picker = function () {
       }, 1);
     }
   }, {
-    key: 'close',
+    key: "close",
     value: function close() {
-      this.container.classList.remove('ql-expanded');
-      this.label.setAttribute('aria-expanded', 'false');
-      this.options.setAttribute('aria-hidden', 'true');
+      this.container.classList.remove("ql-expanded");
+      this.label.setAttribute("aria-expanded", "false");
+      this.options.setAttribute("aria-hidden", "true");
     }
   }, {
-    key: 'selectItem',
+    key: "selectItem",
     value: function selectItem(item) {
       var trigger = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-      var selected = this.container.querySelector('.ql-selected');
+      var selected = this.container.querySelector(".ql-selected");
       if (item === selected) return;
       if (selected != null) {
-        selected.classList.remove('ql-selected');
+        selected.classList.remove("ql-selected");
       }
       if (item == null) return;
-      item.classList.add('ql-selected');
+      item.classList.add("ql-selected");
       this.select.selectedIndex = [].indexOf.call(item.parentNode.children, item);
-      if (item.hasAttribute('data-value')) {
-        this.label.setAttribute('data-value', item.getAttribute('data-value'));
+      if (item.hasAttribute("data-value")) {
+        this.label.setAttribute("data-value", item.getAttribute("data-value"));
       } else {
-        this.label.removeAttribute('data-value');
+        this.label.removeAttribute("data-value");
       }
-      if (item.hasAttribute('data-label')) {
-        this.label.setAttribute('data-label', item.getAttribute('data-label'));
+      if (item.hasAttribute("data-label")) {
+        this.label.setAttribute("data-label", item.getAttribute("data-label"));
       } else {
-        this.label.removeAttribute('data-label');
+        this.label.removeAttribute("data-label");
       }
       if (trigger) {
-        if (typeof Event === 'function') {
-          this.select.dispatchEvent(new Event('change'));
-        } else if ((typeof Event === 'undefined' ? 'undefined' : _typeof(Event)) === 'object') {
+        if (typeof Event === "function") {
+          this.select.dispatchEvent(new Event("change"));
+        } else if ((typeof Event === "undefined" ? "undefined" : _typeof(Event)) === "object") {
           // IE11
-          var event = document.createEvent('Event');
-          event.initEvent('change', true, true);
+          var event = document.createEvent("Event");
+          event.initEvent("change", true, true);
           this.select.dispatchEvent(event);
         }
         this.close();
       }
     }
   }, {
-    key: 'update',
+    key: "update",
     value: function update() {
       var option = void 0;
       if (this.select.selectedIndex > -1) {
-        var item = this.container.querySelector('.ql-picker-options').children[this.select.selectedIndex];
+        var item = this.container.querySelector(".ql-picker-options").children[this.select.selectedIndex];
         option = this.select.options[this.select.selectedIndex];
         this.selectItem(item);
       } else {
         this.selectItem(null);
       }
-      var isActive = option != null && option !== this.select.querySelector('option[selected]');
-      this.label.classList.toggle('ql-active', isActive);
+      var isActive = option != null && option !== this.select.querySelector("option[selected]");
+      this.label.classList.toggle("ql-active", isActive);
     }
   }]);
 
@@ -6676,53 +6676,57 @@ exports.SizeStyle = SizeStyle;
 
 
 module.exports = {
-  'align': {
-    '': __webpack_require__(94),
-    'center': __webpack_require__(95),
-    'right': __webpack_require__(96),
-    'justify': __webpack_require__(97)
+  align: {
+    "": __webpack_require__(93),
+    center: __webpack_require__(94),
+    right: __webpack_require__(95),
+    justify: __webpack_require__(96)
   },
-  'background': __webpack_require__(98),
-  'blockquote': __webpack_require__(99),
-  'bold': __webpack_require__(100),
-  'clean': __webpack_require__(101),
-  'code': __webpack_require__(76),
-  'code-block': __webpack_require__(76),
-  'color': __webpack_require__(102),
-  'direction': {
-    '': __webpack_require__(103),
-    'rtl': __webpack_require__(104)
+  background: __webpack_require__(97),
+  blockquote: __webpack_require__(98),
+  bold: __webpack_require__(99),
+  clean: __webpack_require__(100),
+  code: __webpack_require__(101),
+  "code-block": __webpack_require__(102),
+  color: __webpack_require__(103),
+  direction: {
+    "": __webpack_require__(104),
+    rtl: __webpack_require__(105)
   },
-  'float': {
-    'center': __webpack_require__(105),
-    'full': __webpack_require__(106),
-    'left': __webpack_require__(107),
-    'right': __webpack_require__(108)
+  float: {
+    center: __webpack_require__(106),
+    full: __webpack_require__(107),
+    left: __webpack_require__(108),
+    right: __webpack_require__(109)
   },
-  'formula': __webpack_require__(109),
-  'header': {
-    '1': __webpack_require__(110),
-    '2': __webpack_require__(111)
+  formula: __webpack_require__(110),
+  header: {
+    "1": __webpack_require__(111),
+    "2": __webpack_require__(112),
+    "3": __webpack_require__(113),
+    "4": __webpack_require__(114),
+    "5": __webpack_require__(115),
+    "6": __webpack_require__(116)
   },
-  'italic': __webpack_require__(112),
-  'image': __webpack_require__(113),
-  'indent': {
-    '+1': __webpack_require__(114),
-    '-1': __webpack_require__(115)
+  italic: __webpack_require__(117),
+  image: __webpack_require__(118),
+  indent: {
+    "+1": __webpack_require__(119),
+    "-1": __webpack_require__(120)
   },
-  'link': __webpack_require__(116),
-  'list': {
-    'ordered': __webpack_require__(117),
-    'bullet': __webpack_require__(118),
-    'check': __webpack_require__(119)
+  link: __webpack_require__(121),
+  list: {
+    ordered: __webpack_require__(122),
+    bullet: __webpack_require__(123),
+    check: __webpack_require__(124)
   },
-  'script': {
-    'sub': __webpack_require__(120),
-    'super': __webpack_require__(121)
+  script: {
+    sub: __webpack_require__(125),
+    super: __webpack_require__(126)
   },
-  'strike': __webpack_require__(122),
-  'underline': __webpack_require__(123),
-  'video': __webpack_require__(124)
+  strike: __webpack_require__(127),
+  underline: __webpack_require__(128),
+  video: __webpack_require__(129)
 };
 
 /***/ }),
@@ -6929,11 +6933,11 @@ var _theme = __webpack_require__(40);
 
 var _theme2 = _interopRequireDefault(_theme);
 
-var _colorPicker = __webpack_require__(77);
+var _colorPicker = __webpack_require__(76);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _iconPicker = __webpack_require__(78);
+var _iconPicker = __webpack_require__(77);
 
 var _iconPicker2 = _interopRequireDefault(_iconPicker);
 
@@ -6941,7 +6945,7 @@ var _picker = __webpack_require__(30);
 
 var _picker2 = _interopRequireDefault(_picker);
 
-var _tooltip = __webpack_require__(79);
+var _tooltip = __webpack_require__(78);
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
 
@@ -9912,7 +9916,7 @@ var Clipboard = function (_Module) {
 
       var text = e.clipboardData.getData("Text");
       var isVeryLargeText = false;
-      if (text.length > 10000) {
+      if (text.length > 25000) {
         e.preventDefault();
         this.container.innerHTML = text;
         isVeryLargeText = true;
@@ -10578,12 +10582,6 @@ exports.addControls = addControls;
 
 /***/ }),
 /* 76 */
-/***/ (function(module, exports) {
-
-module.exports = "<svg viewbox=\"0 0 18 18\"> <polyline class=\"ql-even ql-stroke\" points=\"5 7 3 9 5 11\"></polyline> <polyline class=\"ql-even ql-stroke\" points=\"13 7 15 9 13 11\"></polyline> <line class=ql-stroke x1=10 x2=8 y1=5 y2=13></line> </svg>";
-
-/***/ }),
-/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10654,7 +10652,7 @@ var ColorPicker = function (_Picker) {
 exports.default = ColorPicker;
 
 /***/ }),
-/* 78 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10712,7 +10710,7 @@ var IconPicker = function (_Picker) {
 exports.default = IconPicker;
 
 /***/ }),
-/* 79 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10791,7 +10789,7 @@ var Tooltip = function () {
 exports.default = Tooltip;
 
 /***/ }),
-/* 80 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10971,7 +10969,7 @@ SnowTooltip.TEMPLATE = ['<a class="ql-preview" rel="noopener noreferrer" target=
 exports.default = SnowTheme;
 
 /***/ }),
-/* 81 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10989,17 +10987,17 @@ var _align = __webpack_require__(42);
 
 var _direction = __webpack_require__(44);
 
-var _indent = __webpack_require__(82);
+var _indent = __webpack_require__(81);
 
-var _blockquote = __webpack_require__(83);
+var _blockquote = __webpack_require__(82);
 
 var _blockquote2 = _interopRequireDefault(_blockquote);
 
-var _header = __webpack_require__(84);
+var _header = __webpack_require__(83);
 
 var _header2 = _interopRequireDefault(_header);
 
-var _list = __webpack_require__(85);
+var _list = __webpack_require__(84);
 
 var _list2 = _interopRequireDefault(_list);
 
@@ -11015,7 +11013,7 @@ var _bold = __webpack_require__(74);
 
 var _bold2 = _interopRequireDefault(_bold);
 
-var _italic = __webpack_require__(86);
+var _italic = __webpack_require__(85);
 
 var _italic2 = _interopRequireDefault(_italic);
 
@@ -11023,23 +11021,23 @@ var _link = __webpack_require__(29);
 
 var _link2 = _interopRequireDefault(_link);
 
-var _script = __webpack_require__(87);
+var _script = __webpack_require__(86);
 
 var _script2 = _interopRequireDefault(_script);
 
-var _strike = __webpack_require__(88);
+var _strike = __webpack_require__(87);
 
 var _strike2 = _interopRequireDefault(_strike);
 
-var _underline = __webpack_require__(89);
+var _underline = __webpack_require__(88);
 
 var _underline2 = _interopRequireDefault(_underline);
 
-var _image = __webpack_require__(90);
+var _image = __webpack_require__(89);
 
 var _image2 = _interopRequireDefault(_image);
 
-var _video = __webpack_require__(91);
+var _video = __webpack_require__(90);
 
 var _video2 = _interopRequireDefault(_video);
 
@@ -11047,11 +11045,11 @@ var _code = __webpack_require__(13);
 
 var _code2 = _interopRequireDefault(_code);
 
-var _formula = __webpack_require__(92);
+var _formula = __webpack_require__(91);
 
 var _formula2 = _interopRequireDefault(_formula);
 
-var _syntax = __webpack_require__(93);
+var _syntax = __webpack_require__(92);
 
 var _syntax2 = _interopRequireDefault(_syntax);
 
@@ -11067,23 +11065,23 @@ var _picker = __webpack_require__(30);
 
 var _picker2 = _interopRequireDefault(_picker);
 
-var _colorPicker = __webpack_require__(77);
+var _colorPicker = __webpack_require__(76);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _iconPicker = __webpack_require__(78);
+var _iconPicker = __webpack_require__(77);
 
 var _iconPicker2 = _interopRequireDefault(_iconPicker);
 
-var _tooltip = __webpack_require__(79);
+var _tooltip = __webpack_require__(78);
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
 
-var _bubble = __webpack_require__(126);
+var _bubble = __webpack_require__(131);
 
 var _bubble2 = _interopRequireDefault(_bubble);
 
-var _snow = __webpack_require__(80);
+var _snow = __webpack_require__(79);
 
 var _snow2 = _interopRequireDefault(_snow);
 
@@ -11152,7 +11150,7 @@ _core2.default.register({
 exports.default = _core2.default;
 
 /***/ }),
-/* 82 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11225,7 +11223,7 @@ var IndentClass = new IdentAttributor('indent', 'ql-indent', {
 exports.IndentClass = IndentClass;
 
 /***/ }),
-/* 83 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11265,7 +11263,7 @@ Blockquote.tagName = 'blockquote';
 exports.default = Blockquote;
 
 /***/ }),
-/* 84 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11314,7 +11312,7 @@ Header.tagName = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 exports.default = Header;
 
 /***/ }),
-/* 85 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11511,7 +11509,7 @@ exports.ListItem = ListItem;
 exports.default = List;
 
 /***/ }),
-/* 86 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11551,7 +11549,7 @@ Italic.tagName = ['EM', 'I'];
 exports.default = Italic;
 
 /***/ }),
-/* 87 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11615,7 +11613,7 @@ Script.tagName = ['SUB', 'SUP'];
 exports.default = Script;
 
 /***/ }),
-/* 88 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11655,7 +11653,7 @@ Strike.tagName = 'S';
 exports.default = Strike;
 
 /***/ }),
-/* 89 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11695,7 +11693,7 @@ Underline.tagName = 'U';
 exports.default = Underline;
 
 /***/ }),
-/* 90 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11793,7 +11791,7 @@ Image.tagName = 'IMG';
 exports.default = Image;
 
 /***/ }),
-/* 91 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11886,7 +11884,7 @@ Video.tagName = 'IFRAME';
 exports.default = Video;
 
 /***/ }),
-/* 92 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11985,7 +11983,7 @@ exports.FormulaBlot = FormulaBlot;
 exports.default = Formula;
 
 /***/ }),
-/* 93 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12132,199 +12130,235 @@ exports.CodeToken = CodeToken;
 exports.default = Syntax;
 
 /***/ }),
+/* 93 */
+/***/ (function(module, exports) {
+
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-left width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M3,7H15V9H3V7M3,11H21V13H3V11M3,15H15V17H3V15M3,19H21V21H3V19Z /></svg>";
+
+/***/ }),
 /* 94 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=3 x2=13 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=9 y1=4 y2=4></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-center width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M7,7H17V9H7V7M3,11H21V13H3V11M7,15H17V17H7V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
 /* 95 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=14 x2=4 y1=14 y2=14></line> <line class=ql-stroke x1=12 x2=6 y1=4 y2=4></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-right width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M9,7H21V9H9V7M3,11H21V13H3V11M9,15H21V17H9V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
 /* 96 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=15 x2=5 y1=14 y2=14></line> <line class=ql-stroke x1=15 x2=9 y1=4 y2=4></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-justify width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M3,7H21V9H3V7M3,11H21V13H3V11M3,15H21V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
 /* 97 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=15 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=15 x2=3 y1=14 y2=14></line> <line class=ql-stroke x1=15 x2=3 y1=4 y2=4></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-color-highlight width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M4,17L6.75,14.25L6.72,14.23C6.14,13.64 6.14,12.69 6.72,12.11L11.46,7.37L15.7,11.61L10.96,16.35C10.39,16.93 9.46,16.93 8.87,16.37L8.24,17H4M15.91,2.91C16.5,2.33 17.45,2.33 18.03,2.91L20.16,5.03C20.74,5.62 20.74,6.57 20.16,7.16L16.86,10.45L12.62,6.21L15.91,2.91Z\"/></svg>";
 
 /***/ }),
 /* 98 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <g class=\"ql-fill ql-color-label\"> <polygon points=\"6 6.868 6 6 5 6 5 7 5.942 7 6 6.868\"></polygon> <rect height=1 width=1 x=4 y=4></rect> <polygon points=\"6.817 5 6 5 6 6 6.38 6 6.817 5\"></polygon> <rect height=1 width=1 x=2 y=6></rect> <rect height=1 width=1 x=3 y=5></rect> <rect height=1 width=1 x=4 y=7></rect> <polygon points=\"4 11.439 4 11 3 11 3 12 3.755 12 4 11.439\"></polygon> <rect height=1 width=1 x=2 y=12></rect> <rect height=1 width=1 x=2 y=9></rect> <rect height=1 width=1 x=2 y=15></rect> <polygon points=\"4.63 10 4 10 4 11 4.192 11 4.63 10\"></polygon> <rect height=1 width=1 x=3 y=8></rect> <path d=M10.832,4.2L11,4.582V4H10.708A1.948,1.948,0,0,1,10.832,4.2Z></path> <path d=M7,4.582L7.168,4.2A1.929,1.929,0,0,1,7.292,4H7V4.582Z></path> <path d=M8,13H7.683l-0.351.8a1.933,1.933,0,0,1-.124.2H8V13Z></path> <rect height=1 width=1 x=12 y=2></rect> <rect height=1 width=1 x=11 y=3></rect> <path d=M9,3H8V3.282A1.985,1.985,0,0,1,9,3Z></path> <rect height=1 width=1 x=2 y=3></rect> <rect height=1 width=1 x=6 y=2></rect> <rect height=1 width=1 x=3 y=2></rect> <rect height=1 width=1 x=5 y=3></rect> <rect height=1 width=1 x=9 y=2></rect> <rect height=1 width=1 x=15 y=14></rect> <polygon points=\"13.447 10.174 13.469 10.225 13.472 10.232 13.808 11 14 11 14 10 13.37 10 13.447 10.174\"></polygon> <rect height=1 width=1 x=13 y=7></rect> <rect height=1 width=1 x=15 y=5></rect> <rect height=1 width=1 x=14 y=6></rect> <rect height=1 width=1 x=15 y=8></rect> <rect height=1 width=1 x=14 y=9></rect> <path d=M3.775,14H3v1H4V14.314A1.97,1.97,0,0,1,3.775,14Z></path> <rect height=1 width=1 x=14 y=3></rect> <polygon points=\"12 6.868 12 6 11.62 6 12 6.868\"></polygon> <rect height=1 width=1 x=15 y=2></rect> <rect height=1 width=1 x=12 y=5></rect> <rect height=1 width=1 x=13 y=4></rect> <polygon points=\"12.933 9 13 9 13 8 12.495 8 12.933 9\"></polygon> <rect height=1 width=1 x=9 y=14></rect> <rect height=1 width=1 x=8 y=15></rect> <path d=M6,14.926V15H7V14.316A1.993,1.993,0,0,1,6,14.926Z></path> <rect height=1 width=1 x=5 y=15></rect> <path d=M10.668,13.8L10.317,13H10v1h0.792A1.947,1.947,0,0,1,10.668,13.8Z></path> <rect height=1 width=1 x=11 y=15></rect> <path d=M14.332,12.2a1.99,1.99,0,0,1,.166.8H15V12H14.245Z></path> <rect height=1 width=1 x=14 y=15></rect> <rect height=1 width=1 x=15 y=11></rect> </g> <polyline class=ql-stroke points=\"5.5 13 9 5 12.5 13\"></polyline> <line class=ql-stroke x1=11.63 x2=6.38 y1=11 y2=11></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-quote-open width=24 height=24 viewBox=\"0 0 24 24\"><path d=M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z /></svg>";
 
 /***/ }),
 /* 99 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=\"ql-fill ql-stroke\" height=3 width=3 x=4 y=5></rect> <rect class=\"ql-fill ql-stroke\" height=3 width=3 x=11 y=5></rect> <path class=\"ql-even ql-fill ql-stroke\" d=M7,8c0,4.031-3,5-3,5></path> <path class=\"ql-even ql-fill ql-stroke\" d=M14,8c0,4.031-3,5-3,5></path> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-bold width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M13.5,15.5H10V12.5H13.5A1.5,1.5 0 0,1 15,14A1.5,1.5 0 0,1 13.5,15.5M10,6.5H13A1.5,1.5 0 0,1 14.5,8A1.5,1.5 0 0,1 13,9.5H10M15.6,10.79C16.57,10.11 17.25,9 17.25,8C17.25,5.74 15.5,4 13.25,4H7V18H14.04C16.14,18 17.75,16.3 17.75,14.21C17.75,12.69 16.89,11.39 15.6,10.79Z\"/></svg>";
 
 /***/ }),
 /* 100 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-stroke d=M5,4H9.5A2.5,2.5,0,0,1,12,6.5v0A2.5,2.5,0,0,1,9.5,9H5A0,0,0,0,1,5,9V4A0,0,0,0,1,5,4Z></path> <path class=ql-stroke d=M5,9h5.5A2.5,2.5,0,0,1,13,11.5v0A2.5,2.5,0,0,1,10.5,14H5a0,0,0,0,1,0,0V9A0,0,0,0,1,5,9Z></path> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-clear width=24 height=24 viewBox=\"0 0 24 24\"><path d=M6,5V5.18L8.82,8H11.22L10.5,9.68L12.6,11.78L14.21,8H20V5H6M3.27,5L2,6.27L8.97,13.24L6.5,19H9.5L11.07,15.34L16.73,21L18,19.73L3.55,5.27L3.27,5Z /></svg>";
 
 /***/ }),
 /* 101 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg class=\"\" viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=5 x2=13 y1=3 y2=3></line> <line class=ql-stroke x1=6 x2=9.35 y1=12 y2=3></line> <line class=ql-stroke x1=11 x2=15 y1=11 y2=15></line> <line class=ql-stroke x1=15 x2=11 y1=11 y2=15></line> <rect class=ql-fill height=1 rx=0.5 ry=0.5 width=7 x=2 y=14></rect> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-code-tags width=24 height=24 viewBox=\"0 0 24 24\"><path d=M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z /></svg>";
 
 /***/ }),
 /* 102 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=\"ql-color-label ql-stroke ql-transparent\" x1=3 x2=15 y1=15 y2=15></line> <polyline class=ql-stroke points=\"5.5 11 9 3 12.5 11\"></polyline> <line class=ql-stroke x1=11.63 x2=6.38 y1=9 y2=9></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-code-braces width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z\"/></svg>";
 
 /***/ }),
 /* 103 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=\"ql-stroke ql-fill\" points=\"3 11 5 9 3 7 3 11\"></polygon> <line class=\"ql-stroke ql-fill\" x1=15 x2=11 y1=4 y2=4></line> <path class=ql-fill d=M11,3a3,3,0,0,0,0,6h1V3H11Z></path> <rect class=ql-fill height=11 width=1 x=11 y=4></rect> <rect class=ql-fill height=11 width=1 x=13 y=4></rect> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-color-text width=24 height=24 viewBox=\"0 0 24 24\"><path d=M9.62,12L12,5.67L14.37,12M11,3L5.5,17H7.75L8.87,14H15.12L16.25,17H18.5L13,3H11Z /></svg>";
 
 /***/ }),
 /* 104 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=\"ql-stroke ql-fill\" points=\"15 12 13 10 15 8 15 12\"></polygon> <line class=\"ql-stroke ql-fill\" x1=9 x2=5 y1=4 y2=4></line> <path class=ql-fill d=M5,3A3,3,0,0,0,5,9H6V3H5Z></path> <rect class=ql-fill height=11 width=1 x=5 y=4></rect> <rect class=ql-fill height=11 width=1 x=7 y=4></rect> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-textdirection-l-to-r width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M21,18L17,14V17H5V19H17V22M9,10V15H11V4H13V15H15V4H17V2H9A4,4 0 0,0 5,6A4,4 0 0,0 9,10Z\"/></svg>";
 
 /***/ }),
 /* 105 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M14,16H4a1,1,0,0,1,0-2H14A1,1,0,0,1,14,16Z /> <path class=ql-fill d=M14,4H4A1,1,0,0,1,4,2H14A1,1,0,0,1,14,4Z /> <rect class=ql-fill x=3 y=6 width=12 height=6 rx=1 ry=1 /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-textdirection-r-to-l width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M8,17V14L4,18L8,22V19H20V17M10,10V15H12V4H14V15H16V4H18V2H10A4,4 0 0,0 6,6A4,4 0 0,0 10,10Z\"/></svg>";
 
 /***/ }),
 /* 106 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M13,16H5a1,1,0,0,1,0-2h8A1,1,0,0,1,13,16Z /> <path class=ql-fill d=M13,4H5A1,1,0,0,1,5,2h8A1,1,0,0,1,13,4Z /> <rect class=ql-fill x=2 y=6 width=14 height=6 rx=1 ry=1 /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-center width=24 height=24 viewBox=\"0 0 24 24\"><path d=M9,7H15V13H9V7M3,3H21V5H3V3M3,15H21V17H3V15M3,19H17V21H3V19Z /></svg>";
 
 /***/ }),
 /* 107 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15,8H13a1,1,0,0,1,0-2h2A1,1,0,0,1,15,8Z /> <path class=ql-fill d=M15,12H13a1,1,0,0,1,0-2h2A1,1,0,0,1,15,12Z /> <path class=ql-fill d=M15,16H5a1,1,0,0,1,0-2H15A1,1,0,0,1,15,16Z /> <path class=ql-fill d=M15,4H5A1,1,0,0,1,5,2H15A1,1,0,0,1,15,4Z /> <rect class=ql-fill x=2 y=6 width=8 height=6 rx=1 ry=1 /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-none width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,7H9V13H3V7M3,3H21V5H3V3M21,11V13H11V11H21M3,15H17V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
 /* 108 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M5,8H3A1,1,0,0,1,3,6H5A1,1,0,0,1,5,8Z /> <path class=ql-fill d=M5,12H3a1,1,0,0,1,0-2H5A1,1,0,0,1,5,12Z /> <path class=ql-fill d=M13,16H3a1,1,0,0,1,0-2H13A1,1,0,0,1,13,16Z /> <path class=ql-fill d=M13,4H3A1,1,0,0,1,3,2H13A1,1,0,0,1,13,4Z /> <rect class=ql-fill x=8 y=6 width=8 height=6 rx=1 ry=1 transform=\"translate(24 18) rotate(-180)\"/> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-left width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,7H9V13H3V7M3,3H21V5H3V3M21,7V9H11V7H21M21,11V13H11V11H21M3,15H17V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
 /* 109 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M11.759,2.482a2.561,2.561,0,0,0-3.53.607A7.656,7.656,0,0,0,6.8,6.2C6.109,9.188,5.275,14.677,4.15,14.927a1.545,1.545,0,0,0-1.3-.933A0.922,0.922,0,0,0,2,15.036S1.954,16,4.119,16s3.091-2.691,3.7-5.553c0.177-.826.36-1.726,0.554-2.6L8.775,6.2c0.381-1.421.807-2.521,1.306-2.676a1.014,1.014,0,0,0,1.02.56A0.966,0.966,0,0,0,11.759,2.482Z></path> <rect class=ql-fill height=1.6 rx=0.8 ry=0.8 width=5 x=5.15 y=6.2></rect> <path class=ql-fill d=M13.663,12.027a1.662,1.662,0,0,1,.266-0.276q0.193,0.069.456,0.138a2.1,2.1,0,0,0,.535.069,1.075,1.075,0,0,0,.767-0.3,1.044,1.044,0,0,0,.314-0.8,0.84,0.84,0,0,0-.238-0.619,0.8,0.8,0,0,0-.594-0.239,1.154,1.154,0,0,0-.781.3,4.607,4.607,0,0,0-.781,1q-0.091.15-.218,0.346l-0.246.38c-0.068-.288-0.137-0.582-0.212-0.885-0.459-1.847-2.494-.984-2.941-0.8-0.482.2-.353,0.647-0.094,0.529a0.869,0.869,0,0,1,1.281.585c0.217,0.751.377,1.436,0.527,2.038a5.688,5.688,0,0,1-.362.467,2.69,2.69,0,0,1-.264.271q-0.221-.08-0.471-0.147a2.029,2.029,0,0,0-.522-0.066,1.079,1.079,0,0,0-.768.3A1.058,1.058,0,0,0,9,15.131a0.82,0.82,0,0,0,.832.852,1.134,1.134,0,0,0,.787-0.3,5.11,5.11,0,0,0,.776-0.993q0.141-.219.215-0.34c0.046-.076.122-0.194,0.223-0.346a2.786,2.786,0,0,0,.918,1.726,2.582,2.582,0,0,0,2.376-.185c0.317-.181.212-0.565,0-0.494A0.807,0.807,0,0,1,14.176,15a5.159,5.159,0,0,1-.913-2.446l0,0Q13.487,12.24,13.663,12.027Z></path> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-right width=24 height=24 viewBox=\"0 0 24 24\"><path d=M15,7H21V13H15V7M3,3H21V5H3V3M13,7V9H3V7H13M9,11V13H3V11H9M3,15H17V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
 /* 110 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 18 18\"> <path class=ql-fill d=M10,4V14a1,1,0,0,1-2,0V10H3v4a1,1,0,0,1-2,0V4A1,1,0,0,1,3,4V8H8V4a1,1,0,0,1,2,0Zm6.06787,9.209H14.98975V7.59863a.54085.54085,0,0,0-.605-.60547h-.62744a1.01119,1.01119,0,0,0-.748.29688L11.645,8.56641a.5435.5435,0,0,0-.022.8584l.28613.30762a.53861.53861,0,0,0,.84717.0332l.09912-.08789a1.2137,1.2137,0,0,0,.2417-.35254h.02246s-.01123.30859-.01123.60547V13.209H12.041a.54085.54085,0,0,0-.605.60547v.43945a.54085.54085,0,0,0,.605.60547h4.02686a.54085.54085,0,0,0,.605-.60547v-.43945A.54085.54085,0,0,0,16.06787,13.209Z /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-function-variant width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M12.42,5.29C11.32,5.19 10.35,6 10.25,7.11L10,10H12.82V12H9.82L9.38,17.07C9.18,19.27 7.24,20.9 5.04,20.7C3.79,20.59 2.66,19.9 2,18.83L3.5,17.33C3.83,18.38 4.96,18.97 6,18.63C6.78,18.39 7.33,17.7 7.4,16.89L7.82,12H4.82V10H8L8.27,6.93C8.46,4.73 10.39,3.1 12.6,3.28C13.86,3.39 15,4.09 15.66,5.17L14.16,6.67C13.91,5.9 13.23,5.36 12.42,5.29M22,13.65L20.59,12.24L17.76,15.07L14.93,12.24L13.5,13.65L16.35,16.5L13.5,19.31L14.93,20.72L17.76,17.89L20.59,20.72L22,19.31L19.17,16.5L22,13.65Z\"/></svg>";
 
 /***/ }),
 /* 111 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewBox=\"0 0 18 18\"> <path class=ql-fill d=M16.73975,13.81445v.43945a.54085.54085,0,0,1-.605.60547H11.855a.58392.58392,0,0,1-.64893-.60547V14.0127c0-2.90527,3.39941-3.42187,3.39941-4.55469a.77675.77675,0,0,0-.84717-.78125,1.17684,1.17684,0,0,0-.83594.38477c-.2749.26367-.561.374-.85791.13184l-.4292-.34082c-.30811-.24219-.38525-.51758-.1543-.81445a2.97155,2.97155,0,0,1,2.45361-1.17676,2.45393,2.45393,0,0,1,2.68408,2.40918c0,2.45312-3.1792,2.92676-3.27832,3.93848h2.79443A.54085.54085,0,0,1,16.73975,13.81445ZM9,3A.99974.99974,0,0,0,8,4V8H3V4A1,1,0,0,0,1,4V14a1,1,0,0,0,2,0V10H8v4a1,1,0,0,0,2,0V4A.99974.99974,0,0,0,9,3Z /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-1 width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,4H5V10H9V4H11V18H9V12H5V18H3V4M14,18V16H16V6.31L13.5,7.75V5.44L16,4H18V16H20V18H14Z /></svg>";
 
 /***/ }),
 /* 112 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=13 y1=4 y2=4></line> <line class=ql-stroke x1=5 x2=11 y1=14 y2=14></line> <line class=ql-stroke x1=8 x2=10 y1=14 y2=4></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-2 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M21,18H15A2,2 0 0,1 13,16C13,15.47 13.2,15 13.54,14.64L18.41,9.41C18.78,9.05 19,8.55 19,8A2,2 0 0,0 17,6A2,2 0 0,0 15,8H13A4,4 0 0,1 17,4A4,4 0 0,1 21,8C21,9.1 20.55,10.1 19.83,10.83L15,16H21V18Z\"/></svg>";
 
 /***/ }),
 /* 113 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=ql-stroke height=10 width=12 x=3 y=4></rect> <circle class=ql-fill cx=6 cy=7 r=1></circle> <polyline class=\"ql-even ql-fill\" points=\"5 12 5 11 7 9 8 10 11 7 13 9 13 12 5 12\"></polyline> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-3 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M15,4H19A2,2 0 0,1 21,6V16A2,2 0 0,1 19,18H15A2,2 0 0,1 13,16V15H15V16H19V12H15V10H19V6H15V7H13V6A2,2 0 0,1 15,4Z\"/></svg>";
 
 /***/ }),
 /* 114 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=\"ql-fill ql-stroke\" points=\"3 7 3 11 5 9 3 7\"></polyline> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-4 width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,4H5V10H9V4H11V18H9V12H5V18H3V4M18,18V13H13V11L18,4H20V11H21V13H20V18H18M18,11V7.42L15.45,11H18Z /></svg>";
 
 /***/ }),
 /* 115 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=3 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=ql-stroke points=\"5 7 5 11 3 9 5 7\"></polyline> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-5 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M15,4H20V6H15V10H17A4,4 0 0,1 21,14A4,4 0 0,1 17,18H15A2,2 0 0,1 13,16V15H15V16H17A2,2 0 0,0 19,14A2,2 0 0,0 17,12H15A2,2 0 0,1 13,10V6A2,2 0 0,1 15,4Z\"/></svg>";
 
 /***/ }),
 /* 116 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=11 y1=7 y2=11></line> <path class=\"ql-even ql-stroke\" d=M8.9,4.577a3.476,3.476,0,0,1,.36,4.679A3.476,3.476,0,0,1,4.577,8.9C3.185,7.5,2.035,6.4,4.217,4.217S7.5,3.185,8.9,4.577Z></path> <path class=\"ql-even ql-stroke\" d=M13.423,9.1a3.476,3.476,0,0,0-4.679-.36,3.476,3.476,0,0,0,.36,4.679c1.392,1.392,2.5,2.542,4.679.36S14.815,10.5,13.423,9.1Z></path> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-6 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M15,4H19A2,2 0 0,1 21,6V7H19V6H15V10H19A2,2 0 0,1 21,12V16A2,2 0 0,1 19,18H15A2,2 0 0,1 13,16V6A2,2 0 0,1 15,4M15,12V16H19V12H15Z\"/></svg>";
 
 /***/ }),
 /* 117 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=7 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=7 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=7 x2=15 y1=14 y2=14></line> <line class=\"ql-stroke ql-thin\" x1=2.5 x2=4.5 y1=5.5 y2=5.5></line> <path class=ql-fill d=M3.5,6A0.5,0.5,0,0,1,3,5.5V3.085l-0.276.138A0.5,0.5,0,0,1,2.053,3c-0.124-.247-0.023-0.324.224-0.447l1-.5A0.5,0.5,0,0,1,4,2.5v3A0.5,0.5,0,0,1,3.5,6Z></path> <path class=\"ql-stroke ql-thin\" d=M4.5,10.5h-2c0-.234,1.85-1.076,1.85-2.234A0.959,0.959,0,0,0,2.5,8.156></path> <path class=\"ql-stroke ql-thin\" d=M2.5,14.846a0.959,0.959,0,0,0,1.85-.109A0.7,0.7,0,0,0,3.75,14a0.688,0.688,0,0,0,.6-0.736,0.959,0.959,0,0,0-1.85-.109></path> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-italic width=24 height=24 viewBox=\"0 0 24 24\"><path d=M10,4V7H12.21L8.79,15H6V18H14V15H11.79L15.21,7H18V4H10Z /></svg>";
 
 /***/ }),
 /* 118 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=6 x2=15 y1=4 y2=4></line> <line class=ql-stroke x1=6 x2=15 y1=9 y2=9></line> <line class=ql-stroke x1=6 x2=15 y1=14 y2=14></line> <line class=ql-stroke x1=3 x2=3 y1=4 y2=4></line> <line class=ql-stroke x1=3 x2=3 y1=9 y2=9></line> <line class=ql-stroke x1=3 x2=3 y1=14 y2=14></line> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-image width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z\"/></svg>";
 
 /***/ }),
 /* 119 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg class=\"\" viewbox=\"0 0 18 18\"> <line class=ql-stroke x1=9 x2=15 y1=4 y2=4></line> <polyline class=ql-stroke points=\"3 4 4 5 6 3\"></polyline> <line class=ql-stroke x1=9 x2=15 y1=14 y2=14></line> <polyline class=ql-stroke points=\"3 14 4 15 6 13\"></polyline> <line class=ql-stroke x1=9 x2=15 y1=9 y2=9></line> <polyline class=ql-stroke points=\"3 9 4 10 6 8\"></polyline> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-indent-increase width=24 height=24 viewBox=\"0 0 24 24\"><path d=M11,13H21V11H11M11,9H21V7H11M3,3V5H21V3M11,17H21V15H11M3,8V16L7,12M3,21H21V19H3V21Z /></svg>";
 
 /***/ }),
 /* 120 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15.5,15H13.861a3.858,3.858,0,0,0,1.914-2.975,1.8,1.8,0,0,0-1.6-1.751A1.921,1.921,0,0,0,12.021,11.7a0.50013,0.50013,0,1,0,.957.291h0a0.914,0.914,0,0,1,1.053-.725,0.81,0.81,0,0,1,.744.762c0,1.076-1.16971,1.86982-1.93971,2.43082A1.45639,1.45639,0,0,0,12,15.5a0.5,0.5,0,0,0,.5.5h3A0.5,0.5,0,0,0,15.5,15Z /> <path class=ql-fill d=M9.65,5.241a1,1,0,0,0-1.409.108L6,7.964,3.759,5.349A1,1,0,0,0,2.192,6.59178Q2.21541,6.6213,2.241,6.649L4.684,9.5,2.241,12.35A1,1,0,0,0,3.71,13.70722q0.02557-.02768.049-0.05722L6,11.036,8.241,13.65a1,1,0,1,0,1.567-1.24277Q9.78459,12.3777,9.759,12.35L7.316,9.5,9.759,6.651A1,1,0,0,0,9.65,5.241Z /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-indent-decrease width=24 height=24 viewBox=\"0 0 24 24\"><path d=M11,13H21V11H11M11,9H21V7H11M3,3V5H21V3M3,21H21V19H3M3,12L7,16V8M11,17H21V15H11V17Z /></svg>";
 
 /***/ }),
 /* 121 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-fill d=M15.5,7H13.861a4.015,4.015,0,0,0,1.914-2.975,1.8,1.8,0,0,0-1.6-1.751A1.922,1.922,0,0,0,12.021,3.7a0.5,0.5,0,1,0,.957.291,0.917,0.917,0,0,1,1.053-.725,0.81,0.81,0,0,1,.744.762c0,1.077-1.164,1.925-1.934,2.486A1.423,1.423,0,0,0,12,7.5a0.5,0.5,0,0,0,.5.5h3A0.5,0.5,0,0,0,15.5,7Z /> <path class=ql-fill d=M9.651,5.241a1,1,0,0,0-1.41.108L6,7.964,3.759,5.349a1,1,0,1,0-1.519,1.3L4.683,9.5,2.241,12.35a1,1,0,1,0,1.519,1.3L6,11.036,8.241,13.65a1,1,0,0,0,1.519-1.3L7.317,9.5,9.759,6.651A1,1,0,0,0,9.651,5.241Z /> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-link width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z\"/></svg>";
 
 /***/ }),
 /* 122 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <line class=\"ql-stroke ql-thin\" x1=15.5 x2=2.5 y1=8.5 y2=9.5></line> <path class=ql-fill d=M9.007,8C6.542,7.791,6,7.519,6,6.5,6,5.792,7.283,5,9,5c1.571,0,2.765.679,2.969,1.309a1,1,0,0,0,1.9-.617C13.356,4.106,11.354,3,9,3,6.2,3,4,4.538,4,6.5a3.2,3.2,0,0,0,.5,1.843Z></path> <path class=ql-fill d=M8.984,10C11.457,10.208,12,10.479,12,11.5c0,0.708-1.283,1.5-3,1.5-1.571,0-2.765-.679-2.969-1.309a1,1,0,1,0-1.9.617C4.644,13.894,6.646,15,9,15c2.8,0,5-1.538,5-3.5a3.2,3.2,0,0,0-.5-1.843Z></path> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-list-numbered width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M7,13V11H21V13H7M7,19V17H21V19H7M7,7V5H21V7H7M3,8V5H2V4H4V8H3M2,17V16H5V20H2V19H4V18.5H3V17.5H4V17H2M4.25,10A0.75,0.75 0 0,1 5,10.75C5,10.95 4.92,11.14 4.79,11.27L3.12,13H5V14H2V13.08L4,11H2V10H4.25Z\"/></svg>";
 
 /***/ }),
 /* 123 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <path class=ql-stroke d=M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3></path> <rect class=ql-fill height=1 rx=0.5 ry=0.5 width=12 x=3 y=15></rect> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-list-bulleted-square width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,4H7V8H3V4M9,5V7H21V5H9M3,10H7V14H3V10M9,11V13H21V11H9M3,16H7V20H3V16M9,17V19H21V17H9 /></svg>";
 
 /***/ }),
 /* 124 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <rect class=ql-stroke height=12 width=12 x=3 y=3></rect> <rect class=ql-fill height=12 width=1 x=5 y=3></rect> <rect class=ql-fill height=12 width=1 x=12 y=3></rect> <rect class=ql-fill height=2 width=8 x=5 y=8></rect> <rect class=ql-fill height=1 width=3 x=3 y=5></rect> <rect class=ql-fill height=1 width=3 x=3 y=7></rect> <rect class=ql-fill height=1 width=3 x=3 y=10></rect> <rect class=ql-fill height=1 width=3 x=3 y=12></rect> <rect class=ql-fill height=1 width=3 x=12 y=5></rect> <rect class=ql-fill height=1 width=3 x=12 y=7></rect> <rect class=ql-fill height=1 width=3 x=12 y=10></rect> <rect class=ql-fill height=1 width=3 x=12 y=12></rect> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-list-checks width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,5H9V11H3V5M5,7V9H7V7H5M11,7H21V9H11V7M11,15H21V17H11V15M5,20L1.5,16.5L2.91,15.09L5,17.17L9.59,12.59L11,14L5,20Z /></svg>";
 
 /***/ }),
 /* 125 */
 /***/ (function(module, exports) {
 
-module.exports = "<svg viewbox=\"0 0 18 18\"> <polygon class=ql-stroke points=\"7 11 9 13 11 11 7 11\"></polygon> <polygon class=ql-stroke points=\"7 7 9 5 11 7 7 7\"></polygon> </svg>";
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-subscript width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M16,7.41L11.41,12L16,16.59L14.59,18L10,13.41L5.41,18L4,16.59L8.59,12L4,7.41L5.41,6L10,10.59L14.59,6L16,7.41M21.85,21.03H16.97V20.03L17.86,19.23C18.62,18.58 19.18,18.04 19.56,17.6C19.93,17.16 20.12,16.75 20.13,16.36C20.14,16.08 20.05,15.85 19.86,15.66C19.68,15.5 19.39,15.38 19,15.38C18.69,15.38 18.42,15.44 18.16,15.56L17.5,15.94L17.05,14.77C17.32,14.56 17.64,14.38 18.03,14.24C18.42,14.1 18.85,14 19.32,14C20.1,14.04 20.7,14.25 21.1,14.66C21.5,15.07 21.72,15.59 21.72,16.23C21.71,16.79 21.53,17.31 21.18,17.78C20.84,18.25 20.42,18.7 19.91,19.14L19.27,19.66V19.68H21.85V21.03Z\"/></svg>";
 
 /***/ }),
 /* 126 */
+/***/ (function(module, exports) {
+
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-superscript width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M16,7.41L11.41,12L16,16.59L14.59,18L10,13.41L5.41,18L4,16.59L8.59,12L4,7.41L5.41,6L10,10.59L14.59,6L16,7.41M21.85,9H16.97V8L17.86,7.18C18.62,6.54 19.18,6 19.56,5.55C19.93,5.11 20.12,4.7 20.13,4.32C20.14,4.04 20.05,3.8 19.86,3.62C19.68,3.43 19.39,3.34 19,3.33C18.69,3.34 18.42,3.4 18.16,3.5L17.5,3.89L17.05,2.72C17.32,2.5 17.64,2.33 18.03,2.19C18.42,2.05 18.85,2 19.32,2C20.1,2 20.7,2.2 21.1,2.61C21.5,3 21.72,3.54 21.72,4.18C21.71,4.74 21.53,5.26 21.18,5.73C20.84,6.21 20.42,6.66 19.91,7.09L19.27,7.61V7.63H21.85V9Z\"/></svg>";
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports) {
+
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-strikethrough width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,14H21V12H3M5,4V7H10V10H14V7H19V4M10,19H14V16H10V19Z /></svg>";
+
+/***/ }),
+/* 128 */
+/***/ (function(module, exports) {
+
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-underline width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M5,21H19V19H5V21M12,17A6,6 0 0,0 18,11V3H15.5V11A3.5,3.5 0 0,1 12,14.5A3.5,3.5 0 0,1 8.5,11V3H6V11A6,6 0 0,0 12,17Z\"/></svg>";
+
+/***/ }),
+/* 129 */
+/***/ (function(module, exports) {
+
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-video width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z\"/></svg>";
+
+/***/ }),
+/* 130 */
+/***/ (function(module, exports) {
+
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-unfold-more-horizontal width=24 height=24 viewBox=\"0 0 24 24\"><path d=M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z /></svg>";
+
+/***/ }),
+/* 131 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12490,12 +12524,12 @@ exports.BubbleTooltip = BubbleTooltip;
 exports.default = BubbleTheme;
 
 /***/ }),
-/* 127 */,
-/* 128 */,
-/* 129 */,
-/* 130 */,
-/* 131 */,
-/* 132 */
+/* 132 */,
+/* 133 */,
+/* 134 */,
+/* 135 */,
+/* 136 */,
+/* 137 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12505,23 +12539,13 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _quill = __webpack_require__(81);
+var _quill = __webpack_require__(80);
 
 var _quill2 = _interopRequireDefault(_quill);
 
 var _code = __webpack_require__(13);
 
 var _code2 = _interopRequireDefault(_code);
-
-__webpack_require__(133);
-
-__webpack_require__(134);
-
-__webpack_require__(135);
-
-__webpack_require__(136);
-
-__webpack_require__(137);
 
 __webpack_require__(138);
 
@@ -12559,6 +12583,16 @@ __webpack_require__(154);
 
 __webpack_require__(155);
 
+__webpack_require__(156);
+
+__webpack_require__(157);
+
+__webpack_require__(158);
+
+__webpack_require__(159);
+
+__webpack_require__(160);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _quill2.default.register(_code2.default, true); // Syntax version will otherwise be registered
@@ -12566,7 +12600,7 @@ _quill2.default.register(_code2.default, true); // Syntax version will otherwise
 exports.default = _quill2.default;
 
 /***/ }),
-/* 133 */
+/* 138 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12724,7 +12758,7 @@ function initialize(klass, html) {
 }
 
 /***/ }),
-/* 134 */
+/* 139 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12852,7 +12886,7 @@ describe('Scroll', function () {
 });
 
 /***/ }),
-/* 135 */
+/* 140 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12945,7 +12979,7 @@ describe('Block', function () {
 });
 
 /***/ }),
-/* 136 */
+/* 141 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13034,7 +13068,7 @@ describe('Block Embed', function () {
 });
 
 /***/ }),
-/* 137 */
+/* 142 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13071,7 +13105,7 @@ describe('Inline', function () {
 });
 
 /***/ }),
-/* 138 */
+/* 143 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13433,7 +13467,7 @@ describe('Editor', function () {
 });
 
 /***/ }),
-/* 139 */
+/* 144 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13923,7 +13957,7 @@ describe('Selection', function () {
 });
 
 /***/ }),
-/* 140 */
+/* 145 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -13951,7 +13985,7 @@ var _toolbar = __webpack_require__(75);
 
 var _toolbar2 = _interopRequireDefault(_toolbar);
 
-var _snow = __webpack_require__(80);
+var _snow = __webpack_require__(79);
 
 var _snow2 = _interopRequireDefault(_snow);
 
@@ -14714,7 +14748,7 @@ describe('Quill', function () {
 });
 
 /***/ }),
-/* 141 */
+/* 146 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14763,7 +14797,7 @@ describe('Color', function () {
 });
 
 /***/ }),
-/* 142 */
+/* 147 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14821,7 +14855,7 @@ describe('Link', function () {
 });
 
 /***/ }),
-/* 143 */
+/* 148 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14854,7 +14888,7 @@ describe('Script', function () {
 });
 
 /***/ }),
-/* 144 */
+/* 149 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -14903,7 +14937,7 @@ describe('Align', function () {
 });
 
 /***/ }),
-/* 145 */
+/* 150 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15059,7 +15093,7 @@ describe('Code', function () {
 });
 
 /***/ }),
-/* 146 */
+/* 151 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15099,7 +15133,7 @@ describe('Header', function () {
 });
 
 /***/ }),
-/* 147 */
+/* 152 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15132,7 +15166,7 @@ describe('Indent', function () {
 });
 
 /***/ }),
-/* 148 */
+/* 153 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15293,7 +15327,7 @@ describe('List', function () {
 });
 
 /***/ }),
-/* 149 */
+/* 154 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15317,7 +15351,7 @@ describe('Bold', function () {
 });
 
 /***/ }),
-/* 150 */
+/* 155 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15478,7 +15512,7 @@ describe('Clipboard', function () {
 });
 
 /***/ }),
-/* 151 */
+/* 156 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15677,7 +15711,7 @@ describe('History', function () {
 });
 
 /***/ }),
-/* 152 */
+/* 157 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15799,7 +15833,7 @@ describe('Keyboard', function () {
 });
 
 /***/ }),
-/* 153 */
+/* 158 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -15897,7 +15931,7 @@ describe('Toolbar', function () {
 });
 
 /***/ }),
-/* 154 */
+/* 159 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -16056,7 +16090,7 @@ describe('Picker', function () {
 });
 
 /***/ }),
-/* 155 */
+/* 160 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";

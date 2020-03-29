@@ -156,7 +156,7 @@ class Clipboard extends Module {
   prepareMatching() {
     let elementMatchers = [],
       textMatchers = [];
-    this.matchers.forEach(pair => {
+    this.matchers.forEach((pair) => {
       let [selector, matcher] = pair;
       switch (selector) {
         case Node.TEXT_NODE:
@@ -166,7 +166,7 @@ class Clipboard extends Module {
           elementMatchers.push(matcher);
           break;
         default:
-          [].forEach.call(this.container.querySelectorAll(selector), node => {
+          [].forEach.call(this.container.querySelectorAll(selector), (node) => {
             // TODO use weakmap
             node[DOM_KEY] = node[DOM_KEY] || [];
             node[DOM_KEY].push(matcher);
@@ -275,7 +275,7 @@ function matchAttributor(node, delta) {
   attributes
     .concat(classes)
     .concat(styles)
-    .forEach(name => {
+    .forEach((name) => {
       let attr = Parchment.query(name, Parchment.Scope.ATTRIBUTE);
       if (attr != null) {
         formats[attr.attrName] = attr.value(node);

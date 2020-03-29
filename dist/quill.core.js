@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 128);
+/******/ 	return __webpack_require__(__webpack_require__.s = 133);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -9192,7 +9192,7 @@ var Clipboard = function (_Module) {
 
       var text = e.clipboardData.getData("Text");
       var isVeryLargeText = false;
-      if (text.length > 10000) {
+      if (text.length > 25000) {
         e.preventDefault();
         this.container.innerHTML = text;
         isVeryLargeText = true;
@@ -9522,7 +9522,12 @@ exports.matchText = matchText;
 /* 125 */,
 /* 126 */,
 /* 127 */,
-/* 128 */
+/* 128 */,
+/* 129 */,
+/* 130 */,
+/* 131 */,
+/* 132 */,
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(31);
