@@ -1,49 +1,53 @@
 module.exports = {
-  'align': {
-    ''        : require('../assets/icons/align-left.svg'),
-    'center'  : require('../assets/icons/align-center.svg'),
-    'right'   : require('../assets/icons/align-right.svg'),
-    'justify' : require('../assets/icons/align-justify.svg')
+  align: {
+    "": require("@mdi/svg/svg/format-align-left.svg"),
+    center: require("@mdi/svg/svg/format-align-center.svg"),
+    right: require("@mdi/svg/svg/format-align-right.svg"),
+    justify: require("@mdi/svg/svg/format-align-justify.svg")
   },
-  'background': require('../assets/icons/background.svg'),
-  'blockquote': require('../assets/icons/blockquote.svg'),
-  'bold'      : require('../assets/icons/bold.svg'),
-  'clean'     : require('../assets/icons/clean.svg'),
-  'code'      : require('../assets/icons/code.svg'),
-  'code-block': require('../assets/icons/code.svg'),
-  'color'     : require('../assets/icons/color.svg'),
-  'direction' : {
-    ''        : require('../assets/icons/direction-ltr.svg'),
-    'rtl'     : require('../assets/icons/direction-rtl.svg')
+  background: require("@mdi/svg/svg/format-color-highlight.svg"),
+  blockquote: require("@mdi/svg/svg/format-quote-open.svg"),
+  bold: require("@mdi/svg/svg/format-bold.svg"),
+  clean: require("@mdi/svg/svg/format-clear.svg"),
+  code: require("@mdi/svg/svg/code-tags.svg"),
+  "code-block": require("@mdi/svg/svg/code-braces.svg"),
+  color: require("@mdi/svg/svg/format-color-text.svg"),
+  direction: {
+    "": require("@mdi/svg/svg/format-textdirection-l-to-r.svg"),
+    rtl: require("@mdi/svg/svg/format-textdirection-r-to-l.svg")
   },
-  'float': {
-    'center'  : require('../assets/icons/float-center.svg'),
-    'full'    : require('../assets/icons/float-full.svg'),
-    'left'    : require('../assets/icons/float-left.svg'),
-    'right'   : require('../assets/icons/float-right.svg')
+  float: {
+    center: require("@mdi/svg/svg/format-float-center.svg"),
+    full: require("@mdi/svg/svg/format-float-none.svg"),
+    left: require("@mdi/svg/svg/format-float-left.svg"),
+    right: require("@mdi/svg/svg/format-float-right.svg")
   },
-  'formula'   : require('../assets/icons/formula.svg'),
-  'header': {
-    '1'       : require('../assets/icons/header.svg'),
-    '2'       : require('../assets/icons/header-2.svg')
+  formula: require("@mdi/svg/svg/function-variant.svg"),
+  header: {
+    "1": require("@mdi/svg/svg/format-header-1.svg"),
+    "2": require("@mdi/svg/svg/format-header-2.svg"),
+    "3": require("@mdi/svg/svg/format-header-3.svg"),
+    "4": require("@mdi/svg/svg/format-header-4.svg"),
+    "5": require("@mdi/svg/svg/format-header-5.svg"),
+    "6": require("@mdi/svg/svg/format-header-6.svg")
   },
-  'italic'    : require('../assets/icons/italic.svg'),
-  'image'     : require('../assets/icons/image.svg'),
-  'indent': {
-    '+1'      : require('../assets/icons/indent.svg'),
-    '-1'      : require('../assets/icons/outdent.svg')
+  italic: require("@mdi/svg/svg/format-italic.svg"),
+  image: require("@mdi/svg/svg/image.svg"),
+  indent: {
+    "+1": require("@mdi/svg/svg/format-indent-increase.svg"),
+    "-1": require("@mdi/svg/svg/format-indent-decrease.svg")
   },
-  'link'      : require('../assets/icons/link.svg'),
-  'list': {
-    'ordered' : require('../assets/icons/list-ordered.svg'),
-    'bullet'  : require('../assets/icons/list-bullet.svg'),
-    'check'   : require('../assets/icons/list-check.svg')
+  link: require("@mdi/svg/svg/link.svg"),
+  list: {
+    ordered: require("@mdi/svg/svg/format-list-numbered.svg"),
+    bullet: require("@mdi/svg/svg/format-list-bulleted-square.svg"),
+    check: require("@mdi/svg/svg/format-list-checks.svg")
   },
-  'script': {
-    'sub'     : require('../assets/icons/subscript.svg'),
-    'super'   : require('../assets/icons/superscript.svg'),
+  script: {
+    sub: require("@mdi/svg/svg/format-subscript.svg"),
+    super: require("@mdi/svg/svg/format-superscript.svg")
   },
-  'strike'    : require('../assets/icons/strike.svg'),
-  'underline' : require('../assets/icons/underline.svg'),
-  'video'     : require('../assets/icons/video.svg')
+  strike: require("@mdi/svg/svg/format-strikethrough.svg"),
+  underline: require("@mdi/svg/svg/format-underline.svg"),
+  video: require("@mdi/svg/svg/video.svg")
 };
