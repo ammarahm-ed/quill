@@ -6528,7 +6528,7 @@ exports.AlignStyle = AlignStyle;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BackgroundStyle = exports.BackgroundClass = undefined;
+exports.DiffStyle = exports.DiffClass = exports.BackgroundStyle = exports.BackgroundClass = undefined;
 
 var _parchment = __webpack_require__(0);
 
@@ -6538,15 +6538,24 @@ var _color = __webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var BackgroundClass = new _parchment2.default.Attributor.Class('background', 'ql-bg', {
+var BackgroundClass = new _parchment2.default.Attributor.Class("background", "ql-bg", {
   scope: _parchment2.default.Scope.INLINE
 });
-var BackgroundStyle = new _color.ColorAttributor('background', 'background-color', {
+var BackgroundStyle = new _color.ColorAttributor("background", "background-color", {
+  scope: _parchment2.default.Scope.INLINE
+});
+
+var DiffClass = new _parchment2.default.Attributor.Class("diff", "ql-diff", {
+  scope: _parchment2.default.Scope.INLINE
+});
+var DiffStyle = new _color.ColorAttributor("diff", "background-color", {
   scope: _parchment2.default.Scope.INLINE
 });
 
 exports.BackgroundClass = BackgroundClass;
 exports.BackgroundStyle = BackgroundStyle;
+exports.DiffClass = DiffClass;
+exports.DiffStyle = DiffStyle;
 
 /***/ }),
 /* 44 */
@@ -11088,63 +11097,66 @@ var _snow2 = _interopRequireDefault(_snow);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _core2.default.register({
-  'attributors/attribute/direction': _direction.DirectionAttribute,
+  "attributors/attribute/direction": _direction.DirectionAttribute,
 
-  'attributors/class/align': _align.AlignClass,
-  'attributors/class/background': _background.BackgroundClass,
-  'attributors/class/color': _color.ColorClass,
-  'attributors/class/direction': _direction.DirectionClass,
-  'attributors/class/font': _font.FontClass,
-  'attributors/class/size': _size.SizeClass,
+  "attributors/class/align": _align.AlignClass,
+  "attributors/class/background": _background.BackgroundClass,
+  "attributors/class/diff": _background.DiffClass,
+  "attributors/class/color": _color.ColorClass,
+  "attributors/class/direction": _direction.DirectionClass,
+  "attributors/class/font": _font.FontClass,
+  "attributors/class/size": _size.SizeClass,
 
-  'attributors/style/align': _align.AlignStyle,
-  'attributors/style/background': _background.BackgroundStyle,
-  'attributors/style/color': _color.ColorStyle,
-  'attributors/style/direction': _direction.DirectionStyle,
-  'attributors/style/font': _font.FontStyle,
-  'attributors/style/size': _size.SizeStyle
+  "attributors/style/align": _align.AlignStyle,
+  "attributors/style/background": _background.BackgroundStyle,
+  "attributors/style/diff": _background.DiffStyle,
+  "attributors/style/color": _color.ColorStyle,
+  "attributors/style/direction": _direction.DirectionStyle,
+  "attributors/style/font": _font.FontStyle,
+  "attributors/style/size": _size.SizeStyle
 }, true);
 
 _core2.default.register({
-  'formats/align': _align.AlignClass,
-  'formats/direction': _direction.DirectionClass,
-  'formats/indent': _indent.IndentClass,
+  "formats/align": _align.AlignClass,
+  "formats/direction": _direction.DirectionClass,
+  "formats/indent": _indent.IndentClass,
 
-  'formats/background': _background.BackgroundStyle,
-  'formats/color': _color.ColorStyle,
-  'formats/font': _font.FontClass,
-  'formats/size': _size.SizeClass,
+  "formats/background": _background.BackgroundStyle,
+  "formats/diff": _background.DiffStyle,
+  "formats/color": _color.ColorStyle,
+  "formats/font": _font.FontClass,
+  "formats/size": _size.SizeClass,
 
-  'formats/blockquote': _blockquote2.default,
-  'formats/code-block': _code2.default,
-  'formats/header': _header2.default,
-  'formats/list': _list2.default,
+  "formats/blockquote": _blockquote2.default,
+  "formats/code-block": _code2.default,
+  "formats/header": _header2.default,
+  "formats/list": _list2.default,
 
-  'formats/bold': _bold2.default,
-  'formats/code': _code.Code,
-  'formats/italic': _italic2.default,
-  'formats/link': _link2.default,
-  'formats/script': _script2.default,
-  'formats/strike': _strike2.default,
-  'formats/underline': _underline2.default,
+  "formats/bold": _bold2.default,
+  "formats/code": _code.Code,
+  "formats/italic": _italic2.default,
+  "formats/link": _link2.default,
+  "formats/script": _script2.default,
+  "formats/strike": _strike2.default,
+  "formats/underline": _underline2.default,
 
-  'formats/image': _image2.default,
-  'formats/video': _video2.default,
+  "formats/image": _image2.default,
+  "formats/video": _video2.default,
 
-  'formats/list/item': _list.ListItem,
+  "formats/list/item": _list.ListItem,
 
-  'modules/formula': _formula2.default,
-  'modules/syntax': _syntax2.default,
-  'modules/toolbar': _toolbar2.default,
+  "modules/formula": _formula2.default,
+  "modules/syntax": _syntax2.default,
+  "modules/toolbar": _toolbar2.default,
 
-  'themes/bubble': _bubble2.default,
-  'themes/snow': _snow2.default,
+  "themes/bubble": _bubble2.default,
+  "themes/snow": _snow2.default,
 
-  'ui/icons': _icons2.default,
-  'ui/picker': _picker2.default,
-  'ui/icon-picker': _iconPicker2.default,
-  'ui/color-picker': _colorPicker2.default,
-  'ui/tooltip': _tooltip2.default
+  "ui/icons": _icons2.default,
+  "ui/picker": _picker2.default,
+  "ui/icon-picker": _iconPicker2.default,
+  "ui/color-picker": _colorPicker2.default,
+  "ui/tooltip": _tooltip2.default
 }, true);
 
 exports.default = _core2.default;

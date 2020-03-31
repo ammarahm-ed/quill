@@ -6206,7 +6206,7 @@ exports.AlignStyle = AlignStyle;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.BackgroundStyle = exports.BackgroundClass = undefined;
+exports.DiffStyle = exports.DiffClass = exports.BackgroundStyle = exports.BackgroundClass = undefined;
 
 var _parchment = __webpack_require__(0);
 
@@ -6216,15 +6216,24 @@ var _color = __webpack_require__(28);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var BackgroundClass = new _parchment2.default.Attributor.Class('background', 'ql-bg', {
+var BackgroundClass = new _parchment2.default.Attributor.Class("background", "ql-bg", {
   scope: _parchment2.default.Scope.INLINE
 });
-var BackgroundStyle = new _color.ColorAttributor('background', 'background-color', {
+var BackgroundStyle = new _color.ColorAttributor("background", "background-color", {
+  scope: _parchment2.default.Scope.INLINE
+});
+
+var DiffClass = new _parchment2.default.Attributor.Class("diff", "ql-diff", {
+  scope: _parchment2.default.Scope.INLINE
+});
+var DiffStyle = new _color.ColorAttributor("diff", "background-color", {
   scope: _parchment2.default.Scope.INLINE
 });
 
 exports.BackgroundClass = BackgroundClass;
 exports.BackgroundStyle = BackgroundStyle;
+exports.DiffClass = DiffClass;
+exports.DiffStyle = DiffStyle;
 
 /***/ }),
 /* 44 */
