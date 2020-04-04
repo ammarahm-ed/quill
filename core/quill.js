@@ -1,21 +1,21 @@
-import './polyfill';
-import Delta from 'quill-delta';
-import Editor from './editor';
-import Emitter from './emitter';
-import Module from './module';
-import Parchment from 'parchment';
-import Selection, { Range } from './selection';
-import extend from 'extend';
-import logger from './logger';
-import Theme from './theme';
+import "./polyfill";
+import Delta from "quill-delta";
+import Editor from "./editor";
+import Emitter from "./emitter";
+import Module from "./module";
+import Parchment from "parchment";
+import Selection, { Range } from "./selection";
+import extend from "extend";
+import logger from "./logger";
+import Theme from "./theme";
+import DeltaTransformer from "./delta";
 
-let debug = logger('quill');
-
+let debug = logger("quill");
 
 class Quill {
   static debug(limit) {
     if (limit === true) {
-      limit = 'log';
+      limit = "log";
     }
     logger.level(limit);
   }
@@ -32,11 +32,11 @@ class Quill {
   }
 
   static register(path, target, overwrite = false) {
-    if (typeof path !== 'string') {
+    if (typeof path !== "string") {
       let name = path.attrName || path.blotName;
-      if (typeof name === 'string') {
+      if (typeof name === "string") {
         // register(Blot | Attributor, overwrite)
-        this.register('formats/' + name, path, target);
+        this.register("formats/" + name, path, target);
       } else {
         Object.keys(path).forEach((key) => {
           this.register(key, path[key], target);
@@ -47,10 +47,15 @@ class Quill {
         debug.warn(`Overwriting ${path} with`, target);
       }
       this.imports[path] = target;
-      if ((path.startsWith('blots/') || path.startsWith('formats/')) &&
-          target.blotName !== 'abstract') {
+      if (
+        (path.startsWith("blots/") || path.startsWith("formats/")) &&
+        target.blotName !== "abstract"
+      ) {
         Parchment.register(target);
-      } else if (path.startsWith('modules') && typeof target.register === 'function') {
+      } else if (
+        path.startsWith("modules") &&
+        typeof target.register === "function"
+      ) {
         target.register();
       }
     }
@@ -60,48 +65,54 @@ class Quill {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
-      return debug.error('Invalid Quill container', container);
+      return debug.error("Invalid Quill container", container);
     }
     if (this.options.debug) {
       Quill.debug(this.options.debug);
     }
     let html = this.container.innerHTML.trim();
-    this.container.classList.add('ql-container');
-    this.container.innerHTML = '';
+    this.container.classList.add("ql-container");
+    this.container.innerHTML = "";
     this.container.__quill = this;
-    this.root = this.addContainer('ql-editor');
-    this.root.classList.add('ql-blank');
-    this.root.setAttribute('data-gramm', false);
+    this.root = this.addContainer("ql-editor");
+    this.root.classList.add("ql-blank");
+    this.root.setAttribute("data-gramm", false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new Emitter();
     this.scroll = Parchment.create(this.root, {
       emitter: this.emitter,
-      whitelist: this.options.formats
+      whitelist: this.options.formats,
     });
     this.editor = new Editor(this.scroll);
     this.selection = new Selection(this.scroll, this.emitter);
     this.theme = new this.options.theme(this, this.options);
-    this.keyboard = this.theme.addModule('keyboard');
-    this.clipboard = this.theme.addModule('clipboard');
-    this.history = this.theme.addModule('history');
+    this.keyboard = this.theme.addModule("keyboard");
+    this.clipboard = this.theme.addModule("clipboard");
+    this.history = this.theme.addModule("history");
     this.theme.init();
     this.emitter.on(Emitter.events.EDITOR_CHANGE, (type) => {
       if (type === Emitter.events.TEXT_CHANGE) {
-        this.root.classList.toggle('ql-blank', this.editor.isBlank());
+        this.root.classList.toggle("ql-blank", this.editor.isBlank());
       }
     });
     this.emitter.on(Emitter.events.SCROLL_UPDATE, (source, mutations) => {
       let range = this.selection.lastRange;
       let index = range && range.length === 0 ? range.index : undefined;
-      modify.call(this, () => {
-        return this.editor.update(null, mutations, index);
-      }, source);
+      modify.call(
+        this,
+        () => {
+          return this.editor.update(null, mutations, index);
+        },
+        source
+      );
     });
-    let contents = this.clipboard.convert(`<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`);
+    let contents = this.clipboard.convert(
+      `<div class='ql-editor' style="white-space: normal;">${html}<p><br></p></div>`
+    );
     this.setContents(contents);
     this.history.clear();
     if (this.options.placeholder) {
-      this.root.setAttribute('data-placeholder', this.options.placeholder);
+      this.root.setAttribute("data-placeholder", this.options.placeholder);
     }
     if (this.options.readOnly) {
       this.disable();
@@ -109,9 +120,9 @@ class Quill {
   }
 
   addContainer(container, refNode = null) {
-    if (typeof container === 'string') {
+    if (typeof container === "string") {
       let className = container;
-      container = document.createElement('div');
+      container = document.createElement("div");
       container.classList.add(className);
     }
     this.container.insertBefore(container, refNode);
@@ -124,9 +135,15 @@ class Quill {
 
   deleteText(index, length, source) {
     [index, length, , source] = overload(index, length, source);
-    return modify.call(this, () => {
-      return this.editor.deleteText(index, length);
-    }, source, index, -1*length);
+    return modify.call(
+      this,
+      () => {
+        return this.editor.deleteText(index, length);
+      },
+      source,
+      index,
+      -1 * length
+    );
   }
 
   disable() {
@@ -135,7 +152,7 @@ class Quill {
 
   enable(enabled = true) {
     this.scroll.enable(enabled);
-    this.container.classList.toggle('ql-disabled', !enabled);
+    this.container.classList.toggle("ql-disabled", !enabled);
   }
 
   focus() {
@@ -146,43 +163,75 @@ class Quill {
   }
 
   format(name, value, source = Emitter.sources.API) {
-    return modify.call(this, () => {
-      let range = this.getSelection(true);
-      let change = new Delta();
-      if (range == null) {
+    return modify.call(
+      this,
+      () => {
+        let range = this.getSelection(true);
+        let change = new Delta();
+        if (range == null) {
+          return change;
+        } else if (Parchment.query(name, Parchment.Scope.BLOCK)) {
+          change = this.editor.formatLine(range.index, range.length, {
+            [name]: value,
+          });
+        } else if (range.length === 0) {
+          this.selection.format(name, value);
+          return change;
+        } else {
+          change = this.editor.formatText(range.index, range.length, {
+            [name]: value,
+          });
+        }
+        this.setSelection(range, Emitter.sources.SILENT);
         return change;
-      } else if (Parchment.query(name, Parchment.Scope.BLOCK)) {
-        change = this.editor.formatLine(range.index, range.length, { [name]: value });
-      } else if (range.length === 0) {
-        this.selection.format(name, value);
-        return change;
-      } else {
-        change = this.editor.formatText(range.index, range.length, { [name]: value });
-      }
-      this.setSelection(range, Emitter.sources.SILENT);
-      return change;
-    }, source);
+      },
+      source
+    );
   }
 
   formatLine(index, length, name, value, source) {
     let formats;
-    [index, length, formats, source] = overload(index, length, name, value, source);
-    return modify.call(this, () => {
-      return this.editor.formatLine(index, length, formats);
-    }, source, index, 0);
+    [index, length, formats, source] = overload(
+      index,
+      length,
+      name,
+      value,
+      source
+    );
+    return modify.call(
+      this,
+      () => {
+        return this.editor.formatLine(index, length, formats);
+      },
+      source,
+      index,
+      0
+    );
   }
 
   formatText(index, length, name, value, source) {
     let formats;
-    [index, length, formats, source] = overload(index, length, name, value, source);
-    return modify.call(this, () => {
-      return this.editor.formatText(index, length, formats);
-    }, source, index, 0);
+    [index, length, formats, source] = overload(
+      index,
+      length,
+      name,
+      value,
+      source
+    );
+    return modify.call(
+      this,
+      () => {
+        return this.editor.formatText(index, length, formats);
+      },
+      source,
+      index,
+      0
+    );
   }
 
   getBounds(index, length = 0) {
     let bounds;
-    if (typeof index === 'number') {
+    if (typeof index === "number") {
       bounds = this.selection.getBounds(index, length);
     } else {
       bounds = this.selection.getBounds(index.index, index.length);
@@ -194,7 +243,7 @@ class Quill {
       left: bounds.left - containerBounds.left,
       right: bounds.right - containerBounds.left,
       top: bounds.top - containerBounds.top,
-      width: bounds.width
+      width: bounds.width,
     };
   }
 
@@ -204,7 +253,7 @@ class Quill {
   }
 
   getFormat(index = this.getSelection(true), length = 0) {
-    if (typeof index === 'number') {
+    if (typeof index === "number") {
       return this.editor.getFormat(index, length);
     } else {
       return this.editor.getFormat(index.index, index.length);
@@ -228,7 +277,7 @@ class Quill {
   }
 
   getLines(index = 0, length = Number.MAX_VALUE) {
-    if (typeof index !== 'number') {
+    if (typeof index !== "number") {
       return this.scroll.lines(index.index, index.length);
     } else {
       return this.scroll.lines(index, length);
@@ -241,7 +290,7 @@ class Quill {
 
   getSelection(focus = false) {
     if (focus) this.focus();
-    this.update();  // Make sure we access getRange with editor in consistent state
+    this.update(); // Make sure we access getRange with editor in consistent state
     return this.selection.getRange()[0];
   }
 
@@ -255,21 +304,32 @@ class Quill {
   }
 
   insertEmbed(index, embed, value, source = Quill.sources.API) {
-    return modify.call(this, () => {
-      return this.editor.insertEmbed(index, embed, value);
-    }, source, index);
+    return modify.call(
+      this,
+      () => {
+        return this.editor.insertEmbed(index, embed, value);
+      },
+      source,
+      index
+    );
   }
 
   insertText(index, text, name, value, source) {
     let formats;
     [index, , formats, source] = overload(index, 0, name, value, source);
-    return modify.call(this, () => {
-      return this.editor.insertText(index, text, formats);
-    }, source, index, text.length);
+    return modify.call(
+      this,
+      () => {
+        return this.editor.insertText(index, text, formats);
+      },
+      source,
+      index,
+      text.length
+    );
   }
 
   isEnabled() {
-    return !this.container.classList.contains('ql-disabled');
+    return !this.container.classList.contains("ql-disabled");
   }
 
   off() {
@@ -290,9 +350,14 @@ class Quill {
 
   removeFormat(index, length, source) {
     [index, length, , source] = overload(index, length, source);
-    return modify.call(this, () => {
-      return this.editor.removeFormat(index, length);
-    }, source, index);
+    return modify.call(
+      this,
+      () => {
+        return this.editor.removeFormat(index, length);
+      },
+      source,
+      index
+    );
   }
 
   scrollIntoView() {
@@ -300,19 +365,27 @@ class Quill {
   }
 
   setContents(delta, source = Emitter.sources.API) {
-    return modify.call(this, () => {
-      delta = new Delta(delta);
-      let length = this.getLength();
-      let deleted = this.editor.deleteText(0, length);
-      let applied = this.editor.applyDelta(delta);
-      let lastOp = applied.ops[applied.ops.length - 1];
-      if (lastOp != null && typeof(lastOp.insert) === 'string' && lastOp.insert[lastOp.insert.length-1] === '\n') {
-        this.editor.deleteText(this.getLength() - 1, 1);
-        applied.delete(1);
-      }
-      let ret = deleted.compose(applied);
-      return ret;
-    }, source);
+    return modify.call(
+      this,
+      () => {
+        delta = new Delta(delta);
+        let length = this.getLength();
+        let deleted = this.editor.deleteText(0, length);
+        let applied = this.editor.applyDelta(delta);
+        let lastOp = applied.ops[applied.ops.length - 1];
+        if (
+          lastOp != null &&
+          typeof lastOp.insert === "string" &&
+          lastOp.insert[lastOp.insert.length - 1] === "\n"
+        ) {
+          this.editor.deleteText(this.getLength() - 1, 1);
+          applied.delete(1);
+        }
+        let ret = deleted.compose(applied);
+        return ret;
+      },
+      source
+    );
   }
 
   setSelection(index, length, source) {
@@ -333,103 +406,135 @@ class Quill {
   }
 
   update(source = Emitter.sources.USER) {
-    let change = this.scroll.update(source);   // Will update selection before selection.update() does if text changes
+    let change = this.scroll.update(source); // Will update selection before selection.update() does if text changes
     this.selection.update(source);
     return change;
   }
 
   updateContents(delta, source = Emitter.sources.API) {
-    return modify.call(this, () => {
-      delta = new Delta(delta);
-      return this.editor.applyDelta(delta, source);
-    }, source, true);
+    return modify.call(
+      this,
+      () => {
+        delta = new Delta(delta);
+        return this.editor.applyDelta(delta, source);
+      },
+      source,
+      true
+    );
   }
 }
 Quill.DEFAULTS = {
   bounds: null,
   formats: null,
   modules: {},
-  placeholder: '',
+  placeholder: "",
   readOnly: false,
   scrollingContainer: null,
   strict: true,
-  theme: 'default'
+  theme: "default",
 };
 Quill.events = Emitter.events;
 Quill.sources = Emitter.sources;
 // eslint-disable-next-line no-undef
-Quill.version = typeof(QUILL_VERSION) === 'undefined' ? 'dev' : QUILL_VERSION;
+Quill.version = typeof QUILL_VERSION === "undefined" ? "dev" : QUILL_VERSION;
 
 Quill.imports = {
-  'delta'       : Delta,
-  'parchment'   : Parchment,
-  'core/module' : Module,
-  'core/theme'  : Theme
+  delta: Delta,
+  parchment: Parchment,
+  "core/module": Module,
+  "core/theme": Theme,
 };
 
-
 function expandConfig(container, userConfig) {
-  userConfig = extend(true, {
-    container: container,
-    modules: {
-      clipboard: true,
-      keyboard: true,
-      history: true
-    }
-  }, userConfig);
+  userConfig = extend(
+    true,
+    {
+      container: container,
+      modules: {
+        clipboard: true,
+        keyboard: true,
+        history: true,
+      },
+    },
+    userConfig
+  );
   if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
     userConfig.theme = Theme;
   } else {
     userConfig.theme = Quill.import(`themes/${userConfig.theme}`);
     if (userConfig.theme == null) {
-      throw new Error(`Invalid theme ${userConfig.theme}. Did you register it?`);
+      throw new Error(
+        `Invalid theme ${userConfig.theme}. Did you register it?`
+      );
     }
   }
   let themeConfig = extend(true, {}, userConfig.theme.DEFAULTS);
-  [themeConfig, userConfig].forEach(function(config) {
+  [themeConfig, userConfig].forEach(function (config) {
     config.modules = config.modules || {};
-    Object.keys(config.modules).forEach(function(module) {
+    Object.keys(config.modules).forEach(function (module) {
       if (config.modules[module] === true) {
         config.modules[module] = {};
       }
     });
   });
-  let moduleNames = Object.keys(themeConfig.modules).concat(Object.keys(userConfig.modules));
-  let moduleConfig = moduleNames.reduce(function(config, name) {
+  let moduleNames = Object.keys(themeConfig.modules).concat(
+    Object.keys(userConfig.modules)
+  );
+  let moduleConfig = moduleNames.reduce(function (config, name) {
     let moduleClass = Quill.import(`modules/${name}`);
     if (moduleClass == null) {
-      debug.error(`Cannot load ${name} module. Are you sure you registered it?`);
+      debug.error(
+        `Cannot load ${name} module. Are you sure you registered it?`
+      );
     } else {
       config[name] = moduleClass.DEFAULTS || {};
     }
     return config;
   }, {});
   // Special case toolbar shorthand
-  if (userConfig.modules != null && userConfig.modules.toolbar &&
-      userConfig.modules.toolbar.constructor !== Object) {
+  if (
+    userConfig.modules != null &&
+    userConfig.modules.toolbar &&
+    userConfig.modules.toolbar.constructor !== Object
+  ) {
     userConfig.modules.toolbar = {
-      container: userConfig.modules.toolbar
+      container: userConfig.modules.toolbar,
     };
   }
-  userConfig = extend(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
-  ['bounds', 'container', 'scrollingContainer'].forEach(function(key) {
-    if (typeof userConfig[key] === 'string') {
+  userConfig = extend(
+    true,
+    {},
+    Quill.DEFAULTS,
+    { modules: moduleConfig },
+    themeConfig,
+    userConfig
+  );
+  ["bounds", "container", "scrollingContainer"].forEach(function (key) {
+    if (typeof userConfig[key] === "string") {
       userConfig[key] = document.querySelector(userConfig[key]);
     }
   });
-  userConfig.modules = Object.keys(userConfig.modules).reduce(function(config, name) {
+  userConfig.modules = Object.keys(userConfig.modules).reduce(function (
+    config,
+    name
+  ) {
     if (userConfig.modules[name]) {
       config[name] = userConfig.modules[name];
     }
     return config;
-  }, {});
+  },
+  {});
   return userConfig;
 }
 
 // Handle selection preservation and TEXT_CHANGE emission
 // common to modification APIs
 function modify(modifier, source, index, shift) {
-  if (this.options.strict && !this.isEnabled() && source === Emitter.sources.USER) {
+  if (
+    this.options.strict &&
+    !this.isEnabled() &&
+    source === Emitter.sources.USER
+  ) {
     return new Delta();
   }
   let range = index == null ? null : this.getSelection();
@@ -456,21 +561,25 @@ function modify(modifier, source, index, shift) {
 
 function overload(index, length, name, value, source) {
   let formats = {};
-  if (typeof index.index === 'number' && typeof index.length === 'number') {
+  if (typeof index.index === "number" && typeof index.length === "number") {
     // Allow for throwaway end (used by insertText/insertEmbed)
-    if (typeof length !== 'number') {
-      source = value, value = name, name = length, length = index.length, index = index.index;
+    if (typeof length !== "number") {
+      (source = value),
+        (value = name),
+        (name = length),
+        (length = index.length),
+        (index = index.index);
     } else {
-      length = index.length, index = index.index;
+      (length = index.length), (index = index.index);
     }
-  } else if (typeof length !== 'number') {
-    source = value, value = name, name = length, length = 0;
+  } else if (typeof length !== "number") {
+    (source = value), (value = name), (name = length), (length = 0);
   }
   // Handle format being object, two format name/value strings or excluded
-  if (typeof name === 'object') {
+  if (typeof name === "object") {
     formats = name;
     source = value;
-  } else if (typeof name === 'string') {
+  } else if (typeof name === "string") {
     if (value != null) {
       formats[name] = value;
     } else {
@@ -486,12 +595,17 @@ function shiftRange(range, index, length, source) {
   if (range == null) return null;
   let start, end;
   if (index instanceof Delta) {
-    [start, end] = [range.index, range.index + range.length].map(function(pos) {
+    [start, end] = [range.index, range.index + range.length].map(function (
+      pos
+    ) {
       return index.transformPosition(pos, source !== Emitter.sources.USER);
     });
   } else {
-    [start, end] = [range.index, range.index + range.length].map(function(pos) {
-      if (pos < index || (pos === index && source === Emitter.sources.USER)) return pos;
+    [start, end] = [range.index, range.index + range.length].map(function (
+      pos
+    ) {
+      if (pos < index || (pos === index && source === Emitter.sources.USER))
+        return pos;
       if (length >= 0) {
         return pos + length;
       } else {
@@ -502,5 +616,4 @@ function shiftRange(range, index, length, source) {
   return new Range(start, end - start);
 }
 
-
-export { expandConfig, overload, Quill as default };
+export { expandConfig, overload, Quill as default, DeltaTransformer };

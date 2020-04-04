@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 132);
+/******/ 	return __webpack_require__(__webpack_require__.s = 133);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -98,7 +98,7 @@ var attributor_1 = __webpack_require__(12);
 var class_1 = __webpack_require__(34);
 var style_1 = __webpack_require__(35);
 var store_1 = __webpack_require__(33);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var Parchment = {
     Scope: Registry.Scope,
     create: Registry.create,
@@ -125,161 +125,6 @@ exports.default = Parchment;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-Object.defineProperty(exports, "__esModule", { value: true });
-var ParchmentError = /** @class */ (function (_super) {
-    __extends(ParchmentError, _super);
-    function ParchmentError(message) {
-        var _this = this;
-        message = '[Parchment] ' + message;
-        _this = _super.call(this, message) || this;
-        _this.message = message;
-        _this.name = _this.constructor.name;
-        return _this;
-    }
-    return ParchmentError;
-}(Error));
-exports.ParchmentError = ParchmentError;
-var attributes = {};
-var classes = {};
-var tags = {};
-var types = {};
-exports.DATA_KEY = '__blot';
-var Scope;
-(function (Scope) {
-    Scope[Scope["TYPE"] = 3] = "TYPE";
-    Scope[Scope["LEVEL"] = 12] = "LEVEL";
-    Scope[Scope["ATTRIBUTE"] = 13] = "ATTRIBUTE";
-    Scope[Scope["BLOT"] = 14] = "BLOT";
-    Scope[Scope["INLINE"] = 7] = "INLINE";
-    Scope[Scope["BLOCK"] = 11] = "BLOCK";
-    Scope[Scope["BLOCK_BLOT"] = 10] = "BLOCK_BLOT";
-    Scope[Scope["INLINE_BLOT"] = 6] = "INLINE_BLOT";
-    Scope[Scope["BLOCK_ATTRIBUTE"] = 9] = "BLOCK_ATTRIBUTE";
-    Scope[Scope["INLINE_ATTRIBUTE"] = 5] = "INLINE_ATTRIBUTE";
-    Scope[Scope["ANY"] = 15] = "ANY";
-})(Scope = exports.Scope || (exports.Scope = {}));
-function create(input, value) {
-    var match = query(input);
-    if (match == null) {
-        throw new ParchmentError("Unable to create " + input + " blot");
-    }
-    var BlotClass = match;
-    var node = 
-    // @ts-ignore
-    input instanceof Node || input['nodeType'] === Node.TEXT_NODE ? input : BlotClass.create(value);
-    return new BlotClass(node, value);
-}
-exports.create = create;
-function find(node, bubble) {
-    if (bubble === void 0) { bubble = false; }
-    if (node == null)
-        return null;
-    // @ts-ignore
-    if (node[exports.DATA_KEY] != null)
-        return node[exports.DATA_KEY].blot;
-    if (bubble)
-        return find(node.parentNode, bubble);
-    return null;
-}
-exports.find = find;
-function query(query, scope) {
-    if (scope === void 0) { scope = Scope.ANY; }
-    var match;
-    if (typeof query === 'string') {
-        match = types[query] || attributes[query];
-        // @ts-ignore
-    }
-    else if (query instanceof Text || query['nodeType'] === Node.TEXT_NODE) {
-        match = types['text'];
-    }
-    else if (typeof query === 'number') {
-        if (query & Scope.LEVEL & Scope.BLOCK) {
-            match = types['block'];
-        }
-        else if (query & Scope.LEVEL & Scope.INLINE) {
-            match = types['inline'];
-        }
-    }
-    else if (query instanceof HTMLElement) {
-        var names = (query.getAttribute('class') || '').split(/\s+/);
-        for (var i in names) {
-            match = classes[names[i]];
-            if (match)
-                break;
-        }
-        match = match || tags[query.tagName];
-    }
-    if (match == null)
-        return null;
-    // @ts-ignore
-    if (scope & Scope.LEVEL & match.scope && scope & Scope.TYPE & match.scope)
-        return match;
-    return null;
-}
-exports.query = query;
-function register() {
-    var Definitions = [];
-    for (var _i = 0; _i < arguments.length; _i++) {
-        Definitions[_i] = arguments[_i];
-    }
-    if (Definitions.length > 1) {
-        return Definitions.map(function (d) {
-            return register(d);
-        });
-    }
-    var Definition = Definitions[0];
-    if (typeof Definition.blotName !== 'string' && typeof Definition.attrName !== 'string') {
-        throw new ParchmentError('Invalid definition');
-    }
-    else if (Definition.blotName === 'abstract') {
-        throw new ParchmentError('Cannot register abstract class');
-    }
-    types[Definition.blotName || Definition.attrName] = Definition;
-    if (typeof Definition.keyName === 'string') {
-        attributes[Definition.keyName] = Definition;
-    }
-    else {
-        if (Definition.className != null) {
-            classes[Definition.className] = Definition;
-        }
-        if (Definition.tagName != null) {
-            if (Array.isArray(Definition.tagName)) {
-                Definition.tagName = Definition.tagName.map(function (tagName) {
-                    return tagName.toUpperCase();
-                });
-            }
-            else {
-                Definition.tagName = Definition.tagName.toUpperCase();
-            }
-            var tagNames = Array.isArray(Definition.tagName) ? Definition.tagName : [Definition.tagName];
-            tagNames.forEach(function (tag) {
-                if (tags[tag] == null || Definition.className == null) {
-                    tags[tag] = Definition;
-                }
-            });
-        }
-    }
-    return Definition;
-}
-exports.register = register;
-
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var diff = __webpack_require__(57);
@@ -629,6 +474,161 @@ module.exports = Delta;
 
 
 /***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+var ParchmentError = /** @class */ (function (_super) {
+    __extends(ParchmentError, _super);
+    function ParchmentError(message) {
+        var _this = this;
+        message = '[Parchment] ' + message;
+        _this = _super.call(this, message) || this;
+        _this.message = message;
+        _this.name = _this.constructor.name;
+        return _this;
+    }
+    return ParchmentError;
+}(Error));
+exports.ParchmentError = ParchmentError;
+var attributes = {};
+var classes = {};
+var tags = {};
+var types = {};
+exports.DATA_KEY = '__blot';
+var Scope;
+(function (Scope) {
+    Scope[Scope["TYPE"] = 3] = "TYPE";
+    Scope[Scope["LEVEL"] = 12] = "LEVEL";
+    Scope[Scope["ATTRIBUTE"] = 13] = "ATTRIBUTE";
+    Scope[Scope["BLOT"] = 14] = "BLOT";
+    Scope[Scope["INLINE"] = 7] = "INLINE";
+    Scope[Scope["BLOCK"] = 11] = "BLOCK";
+    Scope[Scope["BLOCK_BLOT"] = 10] = "BLOCK_BLOT";
+    Scope[Scope["INLINE_BLOT"] = 6] = "INLINE_BLOT";
+    Scope[Scope["BLOCK_ATTRIBUTE"] = 9] = "BLOCK_ATTRIBUTE";
+    Scope[Scope["INLINE_ATTRIBUTE"] = 5] = "INLINE_ATTRIBUTE";
+    Scope[Scope["ANY"] = 15] = "ANY";
+})(Scope = exports.Scope || (exports.Scope = {}));
+function create(input, value) {
+    var match = query(input);
+    if (match == null) {
+        throw new ParchmentError("Unable to create " + input + " blot");
+    }
+    var BlotClass = match;
+    var node = 
+    // @ts-ignore
+    input instanceof Node || input['nodeType'] === Node.TEXT_NODE ? input : BlotClass.create(value);
+    return new BlotClass(node, value);
+}
+exports.create = create;
+function find(node, bubble) {
+    if (bubble === void 0) { bubble = false; }
+    if (node == null)
+        return null;
+    // @ts-ignore
+    if (node[exports.DATA_KEY] != null)
+        return node[exports.DATA_KEY].blot;
+    if (bubble)
+        return find(node.parentNode, bubble);
+    return null;
+}
+exports.find = find;
+function query(query, scope) {
+    if (scope === void 0) { scope = Scope.ANY; }
+    var match;
+    if (typeof query === 'string') {
+        match = types[query] || attributes[query];
+        // @ts-ignore
+    }
+    else if (query instanceof Text || query['nodeType'] === Node.TEXT_NODE) {
+        match = types['text'];
+    }
+    else if (typeof query === 'number') {
+        if (query & Scope.LEVEL & Scope.BLOCK) {
+            match = types['block'];
+        }
+        else if (query & Scope.LEVEL & Scope.INLINE) {
+            match = types['inline'];
+        }
+    }
+    else if (query instanceof HTMLElement) {
+        var names = (query.getAttribute('class') || '').split(/\s+/);
+        for (var i in names) {
+            match = classes[names[i]];
+            if (match)
+                break;
+        }
+        match = match || tags[query.tagName];
+    }
+    if (match == null)
+        return null;
+    // @ts-ignore
+    if (scope & Scope.LEVEL & match.scope && scope & Scope.TYPE & match.scope)
+        return match;
+    return null;
+}
+exports.query = query;
+function register() {
+    var Definitions = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        Definitions[_i] = arguments[_i];
+    }
+    if (Definitions.length > 1) {
+        return Definitions.map(function (d) {
+            return register(d);
+        });
+    }
+    var Definition = Definitions[0];
+    if (typeof Definition.blotName !== 'string' && typeof Definition.attrName !== 'string') {
+        throw new ParchmentError('Invalid definition');
+    }
+    else if (Definition.blotName === 'abstract') {
+        throw new ParchmentError('Cannot register abstract class');
+    }
+    types[Definition.blotName || Definition.attrName] = Definition;
+    if (typeof Definition.keyName === 'string') {
+        attributes[Definition.keyName] = Definition;
+    }
+    else {
+        if (Definition.className != null) {
+            classes[Definition.className] = Definition;
+        }
+        if (Definition.tagName != null) {
+            if (Array.isArray(Definition.tagName)) {
+                Definition.tagName = Definition.tagName.map(function (tagName) {
+                    return tagName.toUpperCase();
+                });
+            }
+            else {
+                Definition.tagName = Definition.tagName.toUpperCase();
+            }
+            var tagNames = Array.isArray(Definition.tagName) ? Definition.tagName : [Definition.tagName];
+            tagNames.forEach(function (tag) {
+                if (tags[tag] == null || Definition.className == null) {
+                    tags[tag] = Definition;
+                }
+            });
+        }
+    }
+    return Definition;
+}
+exports.register = register;
+
+
+/***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
@@ -771,7 +771,7 @@ var _extend = __webpack_require__(3);
 
 var _extend2 = _interopRequireDefault(_extend);
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -1019,7 +1019,7 @@ exports.default = Block;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = exports.overload = exports.expandConfig = undefined;
+exports.DeltaTransformer = exports.default = exports.overload = exports.expandConfig = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -1029,7 +1029,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 __webpack_require__(56);
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -1065,48 +1065,52 @@ var _theme = __webpack_require__(40);
 
 var _theme2 = _interopRequireDefault(_theme);
 
+var _delta = __webpack_require__(73);
+
+var _delta2 = _interopRequireDefault(_delta);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var debug = (0, _logger2.default)('quill');
+var debug = (0, _logger2.default)("quill");
 
 var Quill = function () {
   _createClass(Quill, null, [{
-    key: 'debug',
+    key: "debug",
     value: function debug(limit) {
       if (limit === true) {
-        limit = 'log';
+        limit = "log";
       }
       _logger2.default.level(limit);
     }
   }, {
-    key: 'find',
+    key: "find",
     value: function find(node) {
       return node.__quill || _parchment2.default.find(node);
     }
   }, {
-    key: 'import',
+    key: "import",
     value: function _import(name) {
       if (this.imports[name] == null) {
-        debug.error('Cannot import ' + name + '. Are you sure it was registered?');
+        debug.error("Cannot import " + name + ". Are you sure it was registered?");
       }
       return this.imports[name];
     }
   }, {
-    key: 'register',
+    key: "register",
     value: function register(path, target) {
       var _this = this;
 
       var overwrite = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
-      if (typeof path !== 'string') {
+      if (typeof path !== "string") {
         var name = path.attrName || path.blotName;
-        if (typeof name === 'string') {
+        if (typeof name === "string") {
           // register(Blot | Attributor, overwrite)
-          this.register('formats/' + name, path, target);
+          this.register("formats/" + name, path, target);
         } else {
           Object.keys(path).forEach(function (key) {
             _this.register(key, path[key], target);
@@ -1114,12 +1118,12 @@ var Quill = function () {
         }
       } else {
         if (this.imports[path] != null && !overwrite) {
-          debug.warn('Overwriting ' + path + ' with', target);
+          debug.warn("Overwriting " + path + " with", target);
         }
         this.imports[path] = target;
-        if ((path.startsWith('blots/') || path.startsWith('formats/')) && target.blotName !== 'abstract') {
+        if ((path.startsWith("blots/") || path.startsWith("formats/")) && target.blotName !== "abstract") {
           _parchment2.default.register(target);
-        } else if (path.startsWith('modules') && typeof target.register === 'function') {
+        } else if (path.startsWith("modules") && typeof target.register === "function") {
           target.register();
         }
       }
@@ -1136,18 +1140,18 @@ var Quill = function () {
     this.options = expandConfig(container, options);
     this.container = this.options.container;
     if (this.container == null) {
-      return debug.error('Invalid Quill container', container);
+      return debug.error("Invalid Quill container", container);
     }
     if (this.options.debug) {
       Quill.debug(this.options.debug);
     }
     var html = this.container.innerHTML.trim();
-    this.container.classList.add('ql-container');
-    this.container.innerHTML = '';
+    this.container.classList.add("ql-container");
+    this.container.innerHTML = "";
     this.container.__quill = this;
-    this.root = this.addContainer('ql-editor');
-    this.root.classList.add('ql-blank');
-    this.root.setAttribute('data-gramm', false);
+    this.root = this.addContainer("ql-editor");
+    this.root.classList.add("ql-blank");
+    this.root.setAttribute("data-gramm", false);
     this.scrollingContainer = this.options.scrollingContainer || this.root;
     this.emitter = new _emitter4.default();
     this.scroll = _parchment2.default.create(this.root, {
@@ -1157,13 +1161,13 @@ var Quill = function () {
     this.editor = new _editor2.default(this.scroll);
     this.selection = new _selection2.default(this.scroll, this.emitter);
     this.theme = new this.options.theme(this, this.options);
-    this.keyboard = this.theme.addModule('keyboard');
-    this.clipboard = this.theme.addModule('clipboard');
-    this.history = this.theme.addModule('history');
+    this.keyboard = this.theme.addModule("keyboard");
+    this.clipboard = this.theme.addModule("clipboard");
+    this.history = this.theme.addModule("history");
     this.theme.init();
     this.emitter.on(_emitter4.default.events.EDITOR_CHANGE, function (type) {
       if (type === _emitter4.default.events.TEXT_CHANGE) {
-        _this2.root.classList.toggle('ql-blank', _this2.editor.isBlank());
+        _this2.root.classList.toggle("ql-blank", _this2.editor.isBlank());
       }
     });
     this.emitter.on(_emitter4.default.events.SCROLL_UPDATE, function (source, mutations) {
@@ -1173,11 +1177,11 @@ var Quill = function () {
         return _this2.editor.update(null, mutations, index);
       }, source);
     });
-    var contents = this.clipboard.convert('<div class=\'ql-editor\' style="white-space: normal;">' + html + '<p><br></p></div>');
+    var contents = this.clipboard.convert("<div class='ql-editor' style=\"white-space: normal;\">" + html + "<p><br></p></div>");
     this.setContents(contents);
     this.history.clear();
     if (this.options.placeholder) {
-      this.root.setAttribute('data-placeholder', this.options.placeholder);
+      this.root.setAttribute("data-placeholder", this.options.placeholder);
     }
     if (this.options.readOnly) {
       this.disable();
@@ -1185,25 +1189,25 @@ var Quill = function () {
   }
 
   _createClass(Quill, [{
-    key: 'addContainer',
+    key: "addContainer",
     value: function addContainer(container) {
       var refNode = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-      if (typeof container === 'string') {
+      if (typeof container === "string") {
         var className = container;
-        container = document.createElement('div');
+        container = document.createElement("div");
         container.classList.add(className);
       }
       this.container.insertBefore(container, refNode);
       return container;
     }
   }, {
-    key: 'blur',
+    key: "blur",
     value: function blur() {
       this.selection.setRange(null);
     }
   }, {
-    key: 'deleteText',
+    key: "deleteText",
     value: function deleteText(index, length, source) {
       var _this3 = this;
 
@@ -1220,20 +1224,20 @@ var Quill = function () {
       }, source, index, -1 * length);
     }
   }, {
-    key: 'disable',
+    key: "disable",
     value: function disable() {
       this.enable(false);
     }
   }, {
-    key: 'enable',
+    key: "enable",
     value: function enable() {
       var enabled = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
       this.scroll.enable(enabled);
-      this.container.classList.toggle('ql-disabled', !enabled);
+      this.container.classList.toggle("ql-disabled", !enabled);
     }
   }, {
-    key: 'focus',
+    key: "focus",
     value: function focus() {
       var scrollTop = this.scrollingContainer.scrollTop;
       this.selection.focus();
@@ -1241,7 +1245,7 @@ var Quill = function () {
       this.scrollIntoView();
     }
   }, {
-    key: 'format',
+    key: "format",
     value: function format(name, value) {
       var _this4 = this;
 
@@ -1265,7 +1269,7 @@ var Quill = function () {
       }, source);
     }
   }, {
-    key: 'formatLine',
+    key: "formatLine",
     value: function formatLine(index, length, name, value, source) {
       var _this5 = this;
 
@@ -1285,7 +1289,7 @@ var Quill = function () {
       }, source, index, 0);
     }
   }, {
-    key: 'formatText',
+    key: "formatText",
     value: function formatText(index, length, name, value, source) {
       var _this6 = this;
 
@@ -1305,12 +1309,12 @@ var Quill = function () {
       }, source, index, 0);
     }
   }, {
-    key: 'getBounds',
+    key: "getBounds",
     value: function getBounds(index) {
       var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
       var bounds = void 0;
-      if (typeof index === 'number') {
+      if (typeof index === "number") {
         bounds = this.selection.getBounds(index, length);
       } else {
         bounds = this.selection.getBounds(index.index, index.length);
@@ -1326,7 +1330,7 @@ var Quill = function () {
       };
     }
   }, {
-    key: 'getContents',
+    key: "getContents",
     value: function getContents() {
       var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.getLength() - index;
@@ -1341,56 +1345,56 @@ var Quill = function () {
       return this.editor.getContents(index, length);
     }
   }, {
-    key: 'getFormat',
+    key: "getFormat",
     value: function getFormat() {
       var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getSelection(true);
       var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
 
-      if (typeof index === 'number') {
+      if (typeof index === "number") {
         return this.editor.getFormat(index, length);
       } else {
         return this.editor.getFormat(index.index, index.length);
       }
     }
   }, {
-    key: 'getIndex',
+    key: "getIndex",
     value: function getIndex(blot) {
       return blot.offset(this.scroll);
     }
   }, {
-    key: 'getLength',
+    key: "getLength",
     value: function getLength() {
       return this.scroll.length();
     }
   }, {
-    key: 'getLeaf',
+    key: "getLeaf",
     value: function getLeaf(index) {
       return this.scroll.leaf(index);
     }
   }, {
-    key: 'getLine',
+    key: "getLine",
     value: function getLine(index) {
       return this.scroll.line(index);
     }
   }, {
-    key: 'getLines',
+    key: "getLines",
     value: function getLines() {
       var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Number.MAX_VALUE;
 
-      if (typeof index !== 'number') {
+      if (typeof index !== "number") {
         return this.scroll.lines(index.index, index.length);
       } else {
         return this.scroll.lines(index, length);
       }
     }
   }, {
-    key: 'getModule',
+    key: "getModule",
     value: function getModule(name) {
       return this.theme.modules[name];
     }
   }, {
-    key: 'getSelection',
+    key: "getSelection",
     value: function getSelection() {
       var focus = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
@@ -1399,7 +1403,7 @@ var Quill = function () {
       return this.selection.getRange()[0];
     }
   }, {
-    key: 'getText',
+    key: "getText",
     value: function getText() {
       var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var length = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : this.getLength() - index;
@@ -1414,12 +1418,12 @@ var Quill = function () {
       return this.editor.getText(index, length);
     }
   }, {
-    key: 'hasFocus',
+    key: "hasFocus",
     value: function hasFocus() {
       return this.selection.hasFocus();
     }
   }, {
-    key: 'insertEmbed',
+    key: "insertEmbed",
     value: function insertEmbed(index, embed, value) {
       var _this7 = this;
 
@@ -1430,7 +1434,7 @@ var Quill = function () {
       }, source, index);
     }
   }, {
-    key: 'insertText',
+    key: "insertText",
     value: function insertText(index, text, name, value, source) {
       var _this8 = this;
 
@@ -1449,32 +1453,32 @@ var Quill = function () {
       }, source, index, text.length);
     }
   }, {
-    key: 'isEnabled',
+    key: "isEnabled",
     value: function isEnabled() {
-      return !this.container.classList.contains('ql-disabled');
+      return !this.container.classList.contains("ql-disabled");
     }
   }, {
-    key: 'off',
+    key: "off",
     value: function off() {
       return this.emitter.off.apply(this.emitter, arguments);
     }
   }, {
-    key: 'on',
+    key: "on",
     value: function on() {
       return this.emitter.on.apply(this.emitter, arguments);
     }
   }, {
-    key: 'once',
+    key: "once",
     value: function once() {
       return this.emitter.once.apply(this.emitter, arguments);
     }
   }, {
-    key: 'pasteHTML',
+    key: "pasteHTML",
     value: function pasteHTML(index, html, source) {
       this.clipboard.dangerouslyPasteHTML(index, html, source);
     }
   }, {
-    key: 'removeFormat',
+    key: "removeFormat",
     value: function removeFormat(index, length, source) {
       var _this9 = this;
 
@@ -1491,12 +1495,12 @@ var Quill = function () {
       }, source, index);
     }
   }, {
-    key: 'scrollIntoView',
+    key: "scrollIntoView",
     value: function scrollIntoView() {
       this.selection.scrollIntoView(this.scrollingContainer);
     }
   }, {
-    key: 'setContents',
+    key: "setContents",
     value: function setContents(delta) {
       var _this10 = this;
 
@@ -1508,7 +1512,7 @@ var Quill = function () {
         var deleted = _this10.editor.deleteText(0, length);
         var applied = _this10.editor.applyDelta(delta);
         var lastOp = applied.ops[applied.ops.length - 1];
-        if (lastOp != null && typeof lastOp.insert === 'string' && lastOp.insert[lastOp.insert.length - 1] === '\n') {
+        if (lastOp != null && typeof lastOp.insert === "string" && lastOp.insert[lastOp.insert.length - 1] === "\n") {
           _this10.editor.deleteText(_this10.getLength() - 1, 1);
           applied.delete(1);
         }
@@ -1517,7 +1521,7 @@ var Quill = function () {
       }, source);
     }
   }, {
-    key: 'setSelection',
+    key: "setSelection",
     value: function setSelection(index, length, source) {
       if (index == null) {
         this.selection.setRange(null, length || Quill.sources.API);
@@ -1537,7 +1541,7 @@ var Quill = function () {
       }
     }
   }, {
-    key: 'setText',
+    key: "setText",
     value: function setText(text) {
       var source = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _emitter4.default.sources.API;
 
@@ -1545,7 +1549,7 @@ var Quill = function () {
       return this.setContents(delta, source);
     }
   }, {
-    key: 'update',
+    key: "update",
     value: function update() {
       var source = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : _emitter4.default.sources.USER;
 
@@ -1554,7 +1558,7 @@ var Quill = function () {
       return change;
     }
   }, {
-    key: 'updateContents',
+    key: "updateContents",
     value: function updateContents(delta) {
       var _this11 = this;
 
@@ -1574,22 +1578,22 @@ Quill.DEFAULTS = {
   bounds: null,
   formats: null,
   modules: {},
-  placeholder: '',
+  placeholder: "",
   readOnly: false,
   scrollingContainer: null,
   strict: true,
-  theme: 'default'
+  theme: "default"
 };
 Quill.events = _emitter4.default.events;
 Quill.sources = _emitter4.default.sources;
 // eslint-disable-next-line no-undef
-Quill.version =  false ? 'dev' : "1.3.7";
+Quill.version =  false ? "dev" : "1.3.7";
 
 Quill.imports = {
-  'delta': _quillDelta2.default,
-  'parchment': _parchment2.default,
-  'core/module': _module2.default,
-  'core/theme': _theme2.default
+  delta: _quillDelta2.default,
+  parchment: _parchment2.default,
+  "core/module": _module2.default,
+  "core/theme": _theme2.default
 };
 
 function expandConfig(container, userConfig) {
@@ -1604,9 +1608,9 @@ function expandConfig(container, userConfig) {
   if (!userConfig.theme || userConfig.theme === Quill.DEFAULTS.theme) {
     userConfig.theme = _theme2.default;
   } else {
-    userConfig.theme = Quill.import('themes/' + userConfig.theme);
+    userConfig.theme = Quill.import("themes/" + userConfig.theme);
     if (userConfig.theme == null) {
-      throw new Error('Invalid theme ' + userConfig.theme + '. Did you register it?');
+      throw new Error("Invalid theme " + userConfig.theme + ". Did you register it?");
     }
   }
   var themeConfig = (0, _extend2.default)(true, {}, userConfig.theme.DEFAULTS);
@@ -1620,9 +1624,9 @@ function expandConfig(container, userConfig) {
   });
   var moduleNames = Object.keys(themeConfig.modules).concat(Object.keys(userConfig.modules));
   var moduleConfig = moduleNames.reduce(function (config, name) {
-    var moduleClass = Quill.import('modules/' + name);
+    var moduleClass = Quill.import("modules/" + name);
     if (moduleClass == null) {
-      debug.error('Cannot load ' + name + ' module. Are you sure you registered it?');
+      debug.error("Cannot load " + name + " module. Are you sure you registered it?");
     } else {
       config[name] = moduleClass.DEFAULTS || {};
     }
@@ -1635,8 +1639,8 @@ function expandConfig(container, userConfig) {
     };
   }
   userConfig = (0, _extend2.default)(true, {}, Quill.DEFAULTS, { modules: moduleConfig }, themeConfig, userConfig);
-  ['bounds', 'container', 'scrollingContainer'].forEach(function (key) {
-    if (typeof userConfig[key] === 'string') {
+  ["bounds", "container", "scrollingContainer"].forEach(function (key) {
+    if (typeof userConfig[key] === "string") {
       userConfig[key] = document.querySelector(userConfig[key]);
     }
   });
@@ -1683,21 +1687,21 @@ function modify(modifier, source, index, shift) {
 
 function overload(index, length, name, value, source) {
   var formats = {};
-  if (typeof index.index === 'number' && typeof index.length === 'number') {
+  if (typeof index.index === "number" && typeof index.length === "number") {
     // Allow for throwaway end (used by insertText/insertEmbed)
-    if (typeof length !== 'number') {
+    if (typeof length !== "number") {
       source = value, value = name, name = length, length = index.length, index = index.index;
     } else {
       length = index.length, index = index.index;
     }
-  } else if (typeof length !== 'number') {
+  } else if (typeof length !== "number") {
     source = value, value = name, name = length, length = 0;
   }
   // Handle format being object, two format name/value strings or excluded
-  if ((typeof name === 'undefined' ? 'undefined' : _typeof(name)) === 'object') {
+  if ((typeof name === "undefined" ? "undefined" : _typeof(name)) === "object") {
     formats = name;
     source = value;
-  } else if (typeof name === 'string') {
+  } else if (typeof name === "string") {
     if (value != null) {
       formats[name] = value;
     } else {
@@ -1743,6 +1747,7 @@ function shiftRange(range, index, length, source) {
 exports.expandConfig = expandConfig;
 exports.overload = overload;
 exports.default = Quill;
+exports.DeltaTransformer = _delta2.default;
 
 /***/ }),
 /* 6 */
@@ -2176,7 +2181,7 @@ module.exports = deepEqual;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var Attributor = /** @class */ (function () {
     function Attributor(attrName, keyName, options) {
         if (options === void 0) { options = {}; }
@@ -2250,7 +2255,7 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -2451,7 +2456,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -3380,7 +3385,7 @@ var __extends = (this && this.__extends) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var linked_list_1 = __webpack_require__(50);
 var shadow_1 = __webpack_require__(32);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var ContainerBlot = /** @class */ (function (_super) {
     __extends(ContainerBlot, _super);
     function ContainerBlot(domNode) {
@@ -3647,7 +3652,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var attributor_1 = __webpack_require__(12);
 var store_1 = __webpack_require__(33);
 var container_1 = __webpack_require__(17);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var FormatBlot = /** @class */ (function (_super) {
     __extends(FormatBlot, _super);
     function FormatBlot(domNode) {
@@ -3727,7 +3732,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var shadow_1 = __webpack_require__(32);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var LeafBlot = /** @class */ (function (_super) {
     __extends(LeafBlot, _super);
     function LeafBlot() {
@@ -4543,7 +4548,7 @@ var _extend = __webpack_require__(3);
 
 var _extend2 = _interopRequireDefault(_extend);
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -5511,7 +5516,7 @@ var _keyboard = __webpack_require__(25);
 
 var _keyboard2 = _interopRequireDefault(_keyboard);
 
-var _unfoldMoreHorizontal = __webpack_require__(130);
+var _unfoldMoreHorizontal = __webpack_require__(131);
 
 var _unfoldMoreHorizontal2 = _interopRequireDefault(_unfoldMoreHorizontal);
 
@@ -5783,7 +5788,7 @@ var _text = __webpack_require__(7);
 
 var _text2 = _interopRequireDefault(_text);
 
-var _clipboard = __webpack_require__(73);
+var _clipboard = __webpack_require__(74);
 
 var _clipboard2 = _interopRequireDefault(_clipboard);
 
@@ -5824,7 +5829,7 @@ exports.default = _quill2.default;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", { value: true });
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var ShadowBlot = /** @class */ (function () {
     function ShadowBlot(domNode) {
         this.domNode = domNode;
@@ -5990,7 +5995,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var attributor_1 = __webpack_require__(12);
 var class_1 = __webpack_require__(34);
 var style_1 = __webpack_require__(35);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var AttributorStore = /** @class */ (function () {
     function AttributorStore(domNode) {
         this.attributes = {};
@@ -6686,56 +6691,56 @@ exports.SizeStyle = SizeStyle;
 
 module.exports = {
   align: {
-    "": __webpack_require__(93),
-    center: __webpack_require__(94),
-    right: __webpack_require__(95),
-    justify: __webpack_require__(96)
+    "": __webpack_require__(94),
+    center: __webpack_require__(95),
+    right: __webpack_require__(96),
+    justify: __webpack_require__(97)
   },
-  background: __webpack_require__(97),
-  blockquote: __webpack_require__(98),
-  bold: __webpack_require__(99),
-  clean: __webpack_require__(100),
-  code: __webpack_require__(101),
-  "code-block": __webpack_require__(102),
-  color: __webpack_require__(103),
+  background: __webpack_require__(98),
+  blockquote: __webpack_require__(99),
+  bold: __webpack_require__(100),
+  clean: __webpack_require__(101),
+  code: __webpack_require__(102),
+  "code-block": __webpack_require__(103),
+  color: __webpack_require__(104),
   direction: {
-    "": __webpack_require__(104),
-    rtl: __webpack_require__(105)
+    "": __webpack_require__(105),
+    rtl: __webpack_require__(106)
   },
   float: {
-    center: __webpack_require__(106),
-    full: __webpack_require__(107),
-    left: __webpack_require__(108),
-    right: __webpack_require__(109)
+    center: __webpack_require__(107),
+    full: __webpack_require__(108),
+    left: __webpack_require__(109),
+    right: __webpack_require__(110)
   },
-  formula: __webpack_require__(110),
+  formula: __webpack_require__(111),
   header: {
-    "1": __webpack_require__(111),
-    "2": __webpack_require__(112),
-    "3": __webpack_require__(113),
-    "4": __webpack_require__(114),
-    "5": __webpack_require__(115),
-    "6": __webpack_require__(116)
+    "1": __webpack_require__(112),
+    "2": __webpack_require__(113),
+    "3": __webpack_require__(114),
+    "4": __webpack_require__(115),
+    "5": __webpack_require__(116),
+    "6": __webpack_require__(117)
   },
-  italic: __webpack_require__(117),
-  image: __webpack_require__(118),
+  italic: __webpack_require__(118),
+  image: __webpack_require__(119),
   indent: {
-    "+1": __webpack_require__(119),
-    "-1": __webpack_require__(120)
+    "+1": __webpack_require__(120),
+    "-1": __webpack_require__(121)
   },
-  link: __webpack_require__(121),
+  link: __webpack_require__(122),
   list: {
-    ordered: __webpack_require__(122),
-    bullet: __webpack_require__(123),
-    check: __webpack_require__(124)
+    ordered: __webpack_require__(123),
+    bullet: __webpack_require__(124),
+    check: __webpack_require__(125)
   },
   script: {
-    sub: __webpack_require__(125),
-    super: __webpack_require__(126)
+    sub: __webpack_require__(126),
+    super: __webpack_require__(127)
   },
-  strike: __webpack_require__(127),
-  underline: __webpack_require__(128),
-  video: __webpack_require__(129)
+  strike: __webpack_require__(128),
+  underline: __webpack_require__(129),
+  video: __webpack_require__(130)
 };
 
 /***/ }),
@@ -6926,7 +6931,7 @@ var _extend = __webpack_require__(3);
 
 var _extend2 = _interopRequireDefault(_extend);
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -6942,11 +6947,11 @@ var _theme = __webpack_require__(40);
 
 var _theme2 = _interopRequireDefault(_theme);
 
-var _colorPicker = __webpack_require__(76);
+var _colorPicker = __webpack_require__(77);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _iconPicker = __webpack_require__(77);
+var _iconPicker = __webpack_require__(78);
 
 var _iconPicker2 = _interopRequireDefault(_iconPicker);
 
@@ -6954,7 +6959,7 @@ var _picker = __webpack_require__(30);
 
 var _picker2 = _interopRequireDefault(_picker);
 
-var _tooltip = __webpack_require__(78);
+var _tooltip = __webpack_require__(79);
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
 
@@ -7408,7 +7413,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var container_1 = __webpack_require__(17);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var OBSERVER_CONFIG = {
     attributes: true,
     characterData: true,
@@ -7592,7 +7597,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var format_1 = __webpack_require__(18);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 // Shallow object comparison
 function isEqual(obj1, obj2) {
     if (Object.keys(obj1).length !== Object.keys(obj2).length)
@@ -7677,7 +7682,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var format_1 = __webpack_require__(18);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var BlockBlot = /** @class */ (function (_super) {
     __extends(BlockBlot, _super);
     function BlockBlot() {
@@ -7801,7 +7806,7 @@ var __extends = (this && this.__extends) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 var leaf_1 = __webpack_require__(19);
-var Registry = __webpack_require__(1);
+var Registry = __webpack_require__(2);
 var TextBlot = /** @class */ (function (_super) {
     __extends(TextBlot, _super);
     function TextBlot(node) {
@@ -9773,6 +9778,65 @@ if ('undefined' !== typeof module) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _quillDelta = __webpack_require__(1);
+
+var _quillDelta2 = _interopRequireDefault(_quillDelta);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DeltaTransformer = function () {
+  function DeltaTransformer() {
+    _classCallCheck(this, DeltaTransformer);
+  }
+
+  _createClass(DeltaTransformer, [{
+    key: "highlightDifference",
+    value: function highlightDifference(first, second, color) {
+      var firstDelta = new _quillDelta2.default(first);
+      var secondDelta = new _quillDelta2.default(second);
+      var diff = secondDelta.diff(firstDelta);
+      var colored = diff.map(function (op) {
+        if (op.insert) {
+          if (!op.attributes) op.attributes = {};
+          if (op.attributes.background) return op;
+          op.attributes.diff = color;
+        }
+        return op;
+      });
+      return secondDelta.compose(new _quillDelta2.default(colored));
+    }
+  }, {
+    key: "cleanDifference",
+    value: function cleanDifference(delta) {
+      return delta.ops.map(function (op) {
+        if (op.attributes && op.attributes.diff) {
+          delete op.attributes.diff;
+        }
+        return op;
+      });
+    }
+  }]);
+
+  return DeltaTransformer;
+}();
+
+exports.default = DeltaTransformer;
+
+/***/ }),
+/* 74 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 exports.matchText = exports.matchSpacing = exports.matchNewline = exports.matchBlot = exports.matchAttributor = exports.default = undefined;
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -9785,7 +9849,7 @@ var _extend2 = __webpack_require__(3);
 
 var _extend3 = _interopRequireDefault(_extend2);
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -10201,7 +10265,7 @@ exports.matchSpacing = matchSpacing;
 exports.matchText = matchText;
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10265,7 +10329,7 @@ Bold.tagName = ['STRONG', 'B'];
 exports.default = Bold;
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10280,7 +10344,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _quillDelta = __webpack_require__(2);
+var _quillDelta = __webpack_require__(1);
 
 var _quillDelta2 = _interopRequireDefault(_quillDelta);
 
@@ -10590,7 +10654,7 @@ exports.default = Toolbar;
 exports.addControls = addControls;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10661,7 +10725,7 @@ var ColorPicker = function (_Picker) {
 exports.default = ColorPicker;
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10719,7 +10783,7 @@ var IconPicker = function (_Picker) {
 exports.default = IconPicker;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10798,7 +10862,7 @@ var Tooltip = function () {
 exports.default = Tooltip;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10978,7 +11042,7 @@ SnowTooltip.TEMPLATE = ['<a class="ql-preview" rel="noopener noreferrer" target=
 exports.default = SnowTheme;
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10996,17 +11060,17 @@ var _align = __webpack_require__(42);
 
 var _direction = __webpack_require__(44);
 
-var _indent = __webpack_require__(81);
+var _indent = __webpack_require__(82);
 
-var _blockquote = __webpack_require__(82);
+var _blockquote = __webpack_require__(83);
 
 var _blockquote2 = _interopRequireDefault(_blockquote);
 
-var _header = __webpack_require__(83);
+var _header = __webpack_require__(84);
 
 var _header2 = _interopRequireDefault(_header);
 
-var _list = __webpack_require__(84);
+var _list = __webpack_require__(85);
 
 var _list2 = _interopRequireDefault(_list);
 
@@ -11018,11 +11082,11 @@ var _font = __webpack_require__(45);
 
 var _size = __webpack_require__(46);
 
-var _bold = __webpack_require__(74);
+var _bold = __webpack_require__(75);
 
 var _bold2 = _interopRequireDefault(_bold);
 
-var _italic = __webpack_require__(85);
+var _italic = __webpack_require__(86);
 
 var _italic2 = _interopRequireDefault(_italic);
 
@@ -11030,23 +11094,23 @@ var _link = __webpack_require__(29);
 
 var _link2 = _interopRequireDefault(_link);
 
-var _script = __webpack_require__(86);
+var _script = __webpack_require__(87);
 
 var _script2 = _interopRequireDefault(_script);
 
-var _strike = __webpack_require__(87);
+var _strike = __webpack_require__(88);
 
 var _strike2 = _interopRequireDefault(_strike);
 
-var _underline = __webpack_require__(88);
+var _underline = __webpack_require__(89);
 
 var _underline2 = _interopRequireDefault(_underline);
 
-var _image = __webpack_require__(89);
+var _image = __webpack_require__(90);
 
 var _image2 = _interopRequireDefault(_image);
 
-var _video = __webpack_require__(90);
+var _video = __webpack_require__(91);
 
 var _video2 = _interopRequireDefault(_video);
 
@@ -11054,15 +11118,15 @@ var _code = __webpack_require__(13);
 
 var _code2 = _interopRequireDefault(_code);
 
-var _formula = __webpack_require__(91);
+var _formula = __webpack_require__(92);
 
 var _formula2 = _interopRequireDefault(_formula);
 
-var _syntax = __webpack_require__(92);
+var _syntax = __webpack_require__(93);
 
 var _syntax2 = _interopRequireDefault(_syntax);
 
-var _toolbar = __webpack_require__(75);
+var _toolbar = __webpack_require__(76);
 
 var _toolbar2 = _interopRequireDefault(_toolbar);
 
@@ -11074,23 +11138,23 @@ var _picker = __webpack_require__(30);
 
 var _picker2 = _interopRequireDefault(_picker);
 
-var _colorPicker = __webpack_require__(76);
+var _colorPicker = __webpack_require__(77);
 
 var _colorPicker2 = _interopRequireDefault(_colorPicker);
 
-var _iconPicker = __webpack_require__(77);
+var _iconPicker = __webpack_require__(78);
 
 var _iconPicker2 = _interopRequireDefault(_iconPicker);
 
-var _tooltip = __webpack_require__(78);
+var _tooltip = __webpack_require__(79);
 
 var _tooltip2 = _interopRequireDefault(_tooltip);
 
-var _bubble = __webpack_require__(131);
+var _bubble = __webpack_require__(132);
 
 var _bubble2 = _interopRequireDefault(_bubble);
 
-var _snow = __webpack_require__(79);
+var _snow = __webpack_require__(80);
 
 var _snow2 = _interopRequireDefault(_snow);
 
@@ -11162,7 +11226,7 @@ _core2.default.register({
 exports.default = _core2.default;
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11235,7 +11299,7 @@ var IndentClass = new IdentAttributor('indent', 'ql-indent', {
 exports.IndentClass = IndentClass;
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11275,7 +11339,7 @@ Blockquote.tagName = 'blockquote';
 exports.default = Blockquote;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11324,7 +11388,7 @@ Header.tagName = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6'];
 exports.default = Header;
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11521,7 +11585,7 @@ exports.ListItem = ListItem;
 exports.default = List;
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11531,7 +11595,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _bold = __webpack_require__(74);
+var _bold = __webpack_require__(75);
 
 var _bold2 = _interopRequireDefault(_bold);
 
@@ -11561,7 +11625,7 @@ Italic.tagName = ['EM', 'I'];
 exports.default = Italic;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11625,7 +11689,7 @@ Script.tagName = ['SUB', 'SUP'];
 exports.default = Script;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11665,7 +11729,7 @@ Strike.tagName = 'S';
 exports.default = Strike;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11705,7 +11769,7 @@ Underline.tagName = 'U';
 exports.default = Underline;
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11803,7 +11867,7 @@ Image.tagName = 'IMG';
 exports.default = Image;
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11896,7 +11960,7 @@ Video.tagName = 'IFRAME';
 exports.default = Video;
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -11995,7 +12059,7 @@ exports.FormulaBlot = FormulaBlot;
 exports.default = Formula;
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12142,235 +12206,235 @@ exports.CodeToken = CodeToken;
 exports.default = Syntax;
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-left width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M3,7H15V9H3V7M3,11H21V13H3V11M3,15H15V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-center width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M7,7H17V9H7V7M3,11H21V13H3V11M7,15H17V17H7V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-right width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M9,7H21V9H9V7M3,11H21V13H3V11M9,15H21V17H9V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-align-justify width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,3H21V5H3V3M3,7H21V9H3V7M3,11H21V13H3V11M3,15H21V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-color-highlight width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M4,17L6.75,14.25L6.72,14.23C6.14,13.64 6.14,12.69 6.72,12.11L11.46,7.37L15.7,11.61L10.96,16.35C10.39,16.93 9.46,16.93 8.87,16.37L8.24,17H4M15.91,2.91C16.5,2.33 17.45,2.33 18.03,2.91L20.16,5.03C20.74,5.62 20.74,6.57 20.16,7.16L16.86,10.45L12.62,6.21L15.91,2.91Z\"/></svg>";
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-quote-open width=24 height=24 viewBox=\"0 0 24 24\"><path d=M10,7L8,11H11V17H5V11L7,7H10M18,7L16,11H19V17H13V11L15,7H18Z /></svg>";
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-bold width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M13.5,15.5H10V12.5H13.5A1.5,1.5 0 0,1 15,14A1.5,1.5 0 0,1 13.5,15.5M10,6.5H13A1.5,1.5 0 0,1 14.5,8A1.5,1.5 0 0,1 13,9.5H10M15.6,10.79C16.57,10.11 17.25,9 17.25,8C17.25,5.74 15.5,4 13.25,4H7V18H14.04C16.14,18 17.75,16.3 17.75,14.21C17.75,12.69 16.89,11.39 15.6,10.79Z\"/></svg>";
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-clear width=24 height=24 viewBox=\"0 0 24 24\"><path d=M6,5V5.18L8.82,8H11.22L10.5,9.68L12.6,11.78L14.21,8H20V5H6M3.27,5L2,6.27L8.97,13.24L6.5,19H9.5L11.07,15.34L16.73,21L18,19.73L3.55,5.27L3.27,5Z /></svg>";
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-code-tags width=24 height=24 viewBox=\"0 0 24 24\"><path d=M14.6,16.6L19.2,12L14.6,7.4L16,6L22,12L16,18L14.6,16.6M9.4,16.6L4.8,12L9.4,7.4L8,6L2,12L8,18L9.4,16.6Z /></svg>";
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-code-braces width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M8,3A2,2 0 0,0 6,5V9A2,2 0 0,1 4,11H3V13H4A2,2 0 0,1 6,15V19A2,2 0 0,0 8,21H10V19H8V14A2,2 0 0,0 6,12A2,2 0 0,0 8,10V5H10V3M16,3A2,2 0 0,1 18,5V9A2,2 0 0,0 20,11H21V13H20A2,2 0 0,0 18,15V19A2,2 0 0,1 16,21H14V19H16V14A2,2 0 0,1 18,12A2,2 0 0,1 16,10V5H14V3H16Z\"/></svg>";
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-color-text width=24 height=24 viewBox=\"0 0 24 24\"><path d=M9.62,12L12,5.67L14.37,12M11,3L5.5,17H7.75L8.87,14H15.12L16.25,17H18.5L13,3H11Z /></svg>";
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-textdirection-l-to-r width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M21,18L17,14V17H5V19H17V22M9,10V15H11V4H13V15H15V4H17V2H9A4,4 0 0,0 5,6A4,4 0 0,0 9,10Z\"/></svg>";
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-textdirection-r-to-l width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M8,17V14L4,18L8,22V19H20V17M10,10V15H12V4H14V15H16V4H18V2H10A4,4 0 0,0 6,6A4,4 0 0,0 10,10Z\"/></svg>";
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-center width=24 height=24 viewBox=\"0 0 24 24\"><path d=M9,7H15V13H9V7M3,3H21V5H3V3M3,15H21V17H3V15M3,19H17V21H3V19Z /></svg>";
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-none width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,7H9V13H3V7M3,3H21V5H3V3M21,11V13H11V11H21M3,15H17V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-left width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,7H9V13H3V7M3,3H21V5H3V3M21,7V9H11V7H21M21,11V13H11V11H21M3,15H17V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-float-right width=24 height=24 viewBox=\"0 0 24 24\"><path d=M15,7H21V13H15V7M3,3H21V5H3V3M13,7V9H3V7H13M9,11V13H3V11H9M3,15H17V17H3V15M3,19H21V21H3V19Z /></svg>";
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-function-variant width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M12.42,5.29C11.32,5.19 10.35,6 10.25,7.11L10,10H12.82V12H9.82L9.38,17.07C9.18,19.27 7.24,20.9 5.04,20.7C3.79,20.59 2.66,19.9 2,18.83L3.5,17.33C3.83,18.38 4.96,18.97 6,18.63C6.78,18.39 7.33,17.7 7.4,16.89L7.82,12H4.82V10H8L8.27,6.93C8.46,4.73 10.39,3.1 12.6,3.28C13.86,3.39 15,4.09 15.66,5.17L14.16,6.67C13.91,5.9 13.23,5.36 12.42,5.29M22,13.65L20.59,12.24L17.76,15.07L14.93,12.24L13.5,13.65L16.35,16.5L13.5,19.31L14.93,20.72L17.76,17.89L20.59,20.72L22,19.31L19.17,16.5L22,13.65Z\"/></svg>";
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-1 width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,4H5V10H9V4H11V18H9V12H5V18H3V4M14,18V16H16V6.31L13.5,7.75V5.44L16,4H18V16H20V18H14Z /></svg>";
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-2 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M21,18H15A2,2 0 0,1 13,16C13,15.47 13.2,15 13.54,14.64L18.41,9.41C18.78,9.05 19,8.55 19,8A2,2 0 0,0 17,6A2,2 0 0,0 15,8H13A4,4 0 0,1 17,4A4,4 0 0,1 21,8C21,9.1 20.55,10.1 19.83,10.83L15,16H21V18Z\"/></svg>";
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-3 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M15,4H19A2,2 0 0,1 21,6V16A2,2 0 0,1 19,18H15A2,2 0 0,1 13,16V15H15V16H19V12H15V10H19V6H15V7H13V6A2,2 0 0,1 15,4Z\"/></svg>";
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-4 width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,4H5V10H9V4H11V18H9V12H5V18H3V4M18,18V13H13V11L18,4H20V11H21V13H20V18H18M18,11V7.42L15.45,11H18Z /></svg>";
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-5 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M15,4H20V6H15V10H17A4,4 0 0,1 21,14A4,4 0 0,1 17,18H15A2,2 0 0,1 13,16V15H15V16H17A2,2 0 0,0 19,14A2,2 0 0,0 17,12H15A2,2 0 0,1 13,10V6A2,2 0 0,1 15,4Z\"/></svg>";
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-header-6 width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3,4H5V10H9V4H11V18H9V12H5V18H3V4M15,4H19A2,2 0 0,1 21,6V7H19V6H15V10H19A2,2 0 0,1 21,12V16A2,2 0 0,1 19,18H15A2,2 0 0,1 13,16V6A2,2 0 0,1 15,4M15,12V16H19V12H15Z\"/></svg>";
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-italic width=24 height=24 viewBox=\"0 0 24 24\"><path d=M10,4V7H12.21L8.79,15H6V18H14V15H11.79L15.21,7H18V4H10Z /></svg>";
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-image width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M8.5,13.5L11,16.5L14.5,12L19,18H5M21,19V5C21,3.89 20.1,3 19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19Z\"/></svg>";
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-indent-increase width=24 height=24 viewBox=\"0 0 24 24\"><path d=M11,13H21V11H11M11,9H21V7H11M3,3V5H21V3M11,17H21V15H11M3,8V16L7,12M3,21H21V19H3V21Z /></svg>";
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-indent-decrease width=24 height=24 viewBox=\"0 0 24 24\"><path d=M11,13H21V11H11M11,9H21V7H11M3,3V5H21V3M3,21H21V19H3M3,12L7,16V8M11,17H21V15H11V17Z /></svg>";
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-link width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M3.9,12C3.9,10.29 5.29,8.9 7,8.9H11V7H7A5,5 0 0,0 2,12A5,5 0 0,0 7,17H11V15.1H7C5.29,15.1 3.9,13.71 3.9,12M8,13H16V11H8V13M17,7H13V8.9H17C18.71,8.9 20.1,10.29 20.1,12C20.1,13.71 18.71,15.1 17,15.1H13V17H17A5,5 0 0,0 22,12A5,5 0 0,0 17,7Z\"/></svg>";
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-list-numbered width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M7,13V11H21V13H7M7,19V17H21V19H7M7,7V5H21V7H7M3,8V5H2V4H4V8H3M2,17V16H5V20H2V19H4V18.5H3V17.5H4V17H2M4.25,10A0.75,0.75 0 0,1 5,10.75C5,10.95 4.92,11.14 4.79,11.27L3.12,13H5V14H2V13.08L4,11H2V10H4.25Z\"/></svg>";
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-list-bulleted-square width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,4H7V8H3V4M9,5V7H21V5H9M3,10H7V14H3V10M9,11V13H21V11H9M3,16H7V20H3V16M9,17V19H21V17H9 /></svg>";
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-list-checks width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,5H9V11H3V5M5,7V9H7V7H5M11,7H21V9H11V7M11,15H21V17H11V15M5,20L1.5,16.5L2.91,15.09L5,17.17L9.59,12.59L11,14L5,20Z /></svg>";
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-subscript width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M16,7.41L11.41,12L16,16.59L14.59,18L10,13.41L5.41,18L4,16.59L8.59,12L4,7.41L5.41,6L10,10.59L14.59,6L16,7.41M21.85,21.03H16.97V20.03L17.86,19.23C18.62,18.58 19.18,18.04 19.56,17.6C19.93,17.16 20.12,16.75 20.13,16.36C20.14,16.08 20.05,15.85 19.86,15.66C19.68,15.5 19.39,15.38 19,15.38C18.69,15.38 18.42,15.44 18.16,15.56L17.5,15.94L17.05,14.77C17.32,14.56 17.64,14.38 18.03,14.24C18.42,14.1 18.85,14 19.32,14C20.1,14.04 20.7,14.25 21.1,14.66C21.5,15.07 21.72,15.59 21.72,16.23C21.71,16.79 21.53,17.31 21.18,17.78C20.84,18.25 20.42,18.7 19.91,19.14L19.27,19.66V19.68H21.85V21.03Z\"/></svg>";
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-superscript width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M16,7.41L11.41,12L16,16.59L14.59,18L10,13.41L5.41,18L4,16.59L8.59,12L4,7.41L5.41,6L10,10.59L14.59,6L16,7.41M21.85,9H16.97V8L17.86,7.18C18.62,6.54 19.18,6 19.56,5.55C19.93,5.11 20.12,4.7 20.13,4.32C20.14,4.04 20.05,3.8 19.86,3.62C19.68,3.43 19.39,3.34 19,3.33C18.69,3.34 18.42,3.4 18.16,3.5L17.5,3.89L17.05,2.72C17.32,2.5 17.64,2.33 18.03,2.19C18.42,2.05 18.85,2 19.32,2C20.1,2 20.7,2.2 21.1,2.61C21.5,3 21.72,3.54 21.72,4.18C21.71,4.74 21.53,5.26 21.18,5.73C20.84,6.21 20.42,6.66 19.91,7.09L19.27,7.61V7.63H21.85V9Z\"/></svg>";
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-strikethrough width=24 height=24 viewBox=\"0 0 24 24\"><path d=M3,14H21V12H3M5,4V7H10V10H14V7H19V4M10,19H14V16H10V19Z /></svg>";
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-format-underline width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M5,21H19V19H5V21M12,17A6,6 0 0,0 18,11V3H15.5V11A3.5,3.5 0 0,1 12,14.5A3.5,3.5 0 0,1 8.5,11V3H6V11A6,6 0 0,0 12,17Z\"/></svg>";
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-video width=24 height=24 viewBox=\"0 0 24 24\"><path d=\"M17,10.5V7A1,1 0 0,0 16,6H4A1,1 0 0,0 3,7V17A1,1 0 0,0 4,18H16A1,1 0 0,0 17,17V13.5L21,17.5V6.5L17,10.5Z\"/></svg>";
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ (function(module, exports) {
 
 module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!doctype html><svg xmlns=http://www.w3.org/2000/svg xmlns:xlink=http://www.w3.org/1999/xlink version=1.1 id=mdi-unfold-more-horizontal width=24 height=24 viewBox=\"0 0 24 24\"><path d=M12,18.17L8.83,15L7.42,16.41L12,21L16.59,16.41L15.17,15M12,5.83L15.17,9L16.58,7.59L12,3L7.41,7.59L8.83,9L12,5.83Z /></svg>";
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -12536,10 +12600,10 @@ exports.BubbleTooltip = BubbleTooltip;
 exports.default = BubbleTheme;
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(80);
+module.exports = __webpack_require__(81);
 
 
 /***/ })
