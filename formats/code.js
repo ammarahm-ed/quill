@@ -43,7 +43,7 @@ CodeBlock.className = 'ql-code-block';
 CodeBlock.tagName = 'DIV';
 CodeBlockContainer.blotName = 'code-block-container';
 CodeBlockContainer.className = 'ql-code-block-container';
-CodeBlockContainer.tagName = 'DIV';
+CodeBlockContainer.tagName = 'PRE';
 
 CodeBlockContainer.allowedChildren = [CodeBlock];
 
