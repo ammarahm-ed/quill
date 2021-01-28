@@ -96,7 +96,6 @@
   list-style-type: none;
   padding-left: 1.5em;
   position: relative;
-  word-break: break-all;
 }
 @supports (display: contents) {
   .ql-editor li > .ql-ui {
